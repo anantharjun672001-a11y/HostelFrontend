@@ -25,7 +25,7 @@ const CreateResident = () => {
       try {
 
         const res = await axios.get(
-          "https://stay-hive.onrender.com/api/auth/residents",
+          "https://hostelbackend-uzne.onrender.com/api/auth/residents",
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -63,7 +63,7 @@ const CreateResident = () => {
     try {
 
       await axios.post(
-        "https://stay-hive.onrender.com/api/resident",
+        "https://hostelbackend-uzne.onrender.com/api/resident",
         form,
         {
           headers: {

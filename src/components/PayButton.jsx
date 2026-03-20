@@ -14,7 +14,7 @@ const PayButton = ({ billId }) => {
       const token = localStorage.getItem("token");
 
       const { data } = await axios.post(
-        `https://stay-hive.onrender.com/api/bill/order/${billId}`,
+        `https://hostelbackend-uzne.onrender.com/api/bill/order/${billId}`,
         {},
         {
           headers: {
@@ -33,7 +33,7 @@ const PayButton = ({ billId }) => {
         handler: async function (response) {
 
           await axios.post(
-            "https://stay-hive.onrender.com/api/bill/verify-payment",
+            "https://hostelbackend-uzne.onrender.com/api/bill/verify-payment",
             response,
             {
               headers: {

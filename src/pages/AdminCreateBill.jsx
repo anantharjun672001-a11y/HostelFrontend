@@ -16,7 +16,7 @@ const AdminCreateBill = () => {
     const fetchResidents = async () => {
       try {
         const { data } = await axios.get(
-          "https://stay-hive.onrender.com/api/resident",
+          "https://hostelbackend-uzne.onrender.com/api/resident",
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -46,7 +46,7 @@ const AdminCreateBill = () => {
 
     try {
       await axios.post(
-        "https://stay-hive.onrender.com/api/bill",
+        "https://hostelbackend-uzne.onrender.com/api/bill",
         form,
         {
           headers: {

@@ -17,7 +17,7 @@ const CreateUsers = () => {
     try {
 
       const res = await axios.post(
-        "https://stay-hive.onrender.com/api/admin/create-user",
+        "https://hostelbackend-uzne.onrender.com/api/admin/create-user",
         data,
         {
           headers: {

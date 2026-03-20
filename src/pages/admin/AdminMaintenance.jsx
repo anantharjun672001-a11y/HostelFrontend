@@ -14,7 +14,7 @@ const AdminMaintenance = () => {
 
   const fetchRequests = async () => {
     try {
-      const res = await axios.get("https://stay-hive.onrender.com/api/maintenance", {
+      const res = await axios.get("https://hostelbackend-uzne.onrender.com/api/maintenance", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -34,7 +34,7 @@ const AdminMaintenance = () => {
 
   const fetchStaff = async () => {
     try {
-      const res = await axios.get("https://stay-hive.onrender.com/api/auth/staff", {
+      const res = await axios.get("https://hostelbackend-uzne.onrender.com/api/auth/staff", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -49,7 +49,7 @@ const AdminMaintenance = () => {
   const handleAssign = async (id, staffId) => {
     try {
       await axios.put(
-        `https://stay-hive.onrender.com/api/maintenance/assign/${id}`,
+        `https://hostelbackend-uzne.onrender.com/api/maintenance/assign/${id}`,
         { staffId },
         {
           headers: {
@@ -69,7 +69,7 @@ const AdminMaintenance = () => {
   const updateStatus = async (id, status) => {
     try {
       await axios.put(
-        `https://stay-hive.onrender.com/api/maintenance/status/${id}`,
+        `https://hostelbackend-uzne.onrender.com/api/maintenance/status/${id}`,
         { status },
         {
           headers: {

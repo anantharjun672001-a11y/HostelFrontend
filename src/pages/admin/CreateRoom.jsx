@@ -21,7 +21,7 @@ const CreateRoom = () => {
 
     try {
       const res = await axios.post(
-        "https://stay-hive.onrender.com/api/room/create",
+        "https://hostelbackend-uzne.onrender.com/api/room/create",
         form,
         {
           headers: {

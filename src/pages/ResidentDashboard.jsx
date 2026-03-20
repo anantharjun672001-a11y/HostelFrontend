@@ -13,7 +13,7 @@ const ResidentDashboard = () => {
       try {
 
         const { data } = await axios.get(
-          "https://stay-hive.onrender.com/api/bill/my",
+          "https://hostelbackend-uzne.onrender.com/api/bill/my",
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -40,7 +40,7 @@ const ResidentDashboard = () => {
     try {
 
       const response = await axios.get(
-        `https://stay-hive.onrender.com/api/bill/invoice/${billId}`,
+        `https://hostelbackend-uzne.onrender.com/api/bill/invoice/${billId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

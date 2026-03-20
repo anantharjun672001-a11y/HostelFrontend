@@ -14,7 +14,7 @@ const Login = () => {
 
     try {
       const res = await axios.post(
-        "https://stay-hive.onrender.com/api/auth/login",
+        "https://hostelbackend-uzne.onrender.com/api/auth/login",
         data,
       );
 
