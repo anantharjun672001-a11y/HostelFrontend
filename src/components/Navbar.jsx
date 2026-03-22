@@ -1,10 +1,11 @@
-import { Link, useNavigate } from "react-router-dom";
-import NotificationBell from "./NotificationBell";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Bell } from "lucide-react";
 
 const Navbar = () => {
-
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
+  const location = useLocation();
+
+  const user = JSON.parse(localStorage.getItem("user")) || null;
   const role = user?.role;
 
   const logout = () => {
@@ -13,121 +14,71 @@ const Navbar = () => {
     navigate("/login");
   };
 
+  const isDashboardPage =
+    location.pathname.startsWith("/dashboard") ||
+    location.pathname.startsWith("/admin") ||
+    location.pathname.startsWith("/resident");
+
+  const handleLogoClick = () => {
+    if (!user) {
+      navigate("/");
+    }
+  };
+
   return (
+    <nav className="bg-gradient-to-r from-[#F3E3D0] via-[#D2C4B4] via-[#AACDDC] to-[#81A6C6] shadow-md">
 
-<nav className="bg-gray-300 border-b border-gray-200 shadow-sm">
-  <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <div
+        className={`flex items-center justify-between px-6 py-3 
+        ${isDashboardPage ? "ml-16 md:ml-64" : ""}`}
+      >
 
-    <Link to="/" className="text-xl font-bold text-blue-600">
-      StayHive
-    </Link>
-
-    <div className="flex items-center gap-4">
-
-      {/* Dashboard only after login */}
-      {user && (
-        <Link to="/dashboard" className="text-gray-700 hover:text-blue-600 font-medium">
-          Dashboard
-        </Link>
-      )}
-
-      {/* ADMIN + STAFF NAVBAR */}
-      {user && (role === "admin" || role === "staff") && (
-        <>
-          <Link to="/admin/rooms" className="hover:text-blue-600">
-            Rooms
-          </Link>
-
-          <Link to="/admin/residents" className="hover:text-blue-600">
-            Residents
-          </Link>
-
-          <Link to="/admin/maintenance" className="hover:text-blue-600">
-            Maintenance
-          </Link>
-        </>
-      )}
-
-      {/* ADMIN ONLY */}
-      {user && role === "admin" && (
-        <>
-          <Link to="/admin/bills" className="hover:text-blue-600">
-            Bills
-          </Link>
-
-          <Link to="/admin/create-bill" className="hover:text-blue-600">
-            Create Bill
-          </Link>
-
-          <Link to="/admin/payments" className="hover:text-blue-600">
-            Payments
-          </Link>
-
-          <Link to="/admin/revenue" className="hover:text-blue-600">
-            Revenue
-          </Link>
-
-          <Link to="/admin/create-staff" className="hover:text-blue-600">
-            Create Staff
-          </Link>
-          <Link to="/admin/create-user"  className="hover:text-blue-600">
-            Create User
-          </Link>
-        </>
-      )}
-
-      {/* RESIDENT NAVBAR */}
-      {user && role === "resident" && (
-        <>
-          <Link to="/resident/rooms" className="hover:text-blue-600">
-            Rooms
-          </Link>
-
-          <Link to="/resident/my-room" className="hover:text-blue-600">
-            My Room
-          </Link>
-
-          <Link to="/resident/bills" className="hover:text-blue-600">
-            My Bills
-          </Link>
-
-          <Link to="/resident/maintenance/create" className="hover:text-blue-600">
-            Create Request
-          </Link>
-
-          <Link to="/resident/maintenance" className="hover:text-blue-600">
-            Maintenance
-          </Link>
-        </>
-      )}
-
-      {/* Notification */}
-      {user && <NotificationBell />}
-
-      {/* Logout */}
-      {user && (
-        <button
-          onClick={logout}
-          className="bg-red-500 text-white px-3 py-1.5 rounded-lg hover:bg-red-600 text-sm"
+        
+        <h1
+          onClick={handleLogoClick}
+          className={`text-xl font-bold text-gray-800 
+          ${!user ? "cursor-pointer hover:opacity-80" : "cursor-default"}`}
         >
-          Logout
-        </button>
-      )}
+          StayHive
+        </h1>
 
-      {/* Login button */}
-      {!user && (
-        <Link
-          to="/login"
-          className="bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 text-sm"
-        >
-          Login
-        </Link>
-      )}
+        {/* Logged OUT → only logo */}
+        {!user ? null : (
 
-    </div>
-  </div>
-</nav>
+          <div className="flex items-center gap-5">
 
+            {/*  Resident only */}
+            {role === "resident" && (
+              <div className="relative cursor-pointer">
+                <Bell className="text-gray-700 hover:text-gray-900 transition-transform duration-200 hover:scale-110" />
+                <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+              </div>
+            )}
+
+            {/*  Profile */}
+            <div className="flex items-center gap-2">
+
+              <div className="w-8 h-8 bg-[#81A6C6] text-white flex items-center justify-center rounded-full font-semibold">
+                {user.name ? user.name[0].toUpperCase() : "U"}
+              </div>
+
+              <span className="text-gray-800 font-medium hidden sm:block">
+                {user.name || "User"}
+              </span>
+            </div>
+
+            {/* Logout */}
+            <button
+              onClick={logout}
+              className="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-sm transition"
+            >
+              Logout
+            </button>
+
+          </div>
+        )}
+      </div>
+    </nav>
   );
 };
 
