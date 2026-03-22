@@ -1,13 +1,14 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 
-const RoleRoute = ({ children, role }) => {
+const RoleRoute = ({ children, allowedRoles }) => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-  if (!user.role || user.role !== role) {
-    return <Navigate to="/" replace />;
+  
+  if (!user.role || !allowedRoles.includes(user.role)) {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return children;
 };
+
 export default RoleRoute;

@@ -59,11 +59,6 @@ const Login = () => {
             Sign in to your account
           </p>
 
-          <p className="text-center text-gray-300 text-sm mb-4">
-            If login takes time, please wait 30–60 seconds as the backend server
-            may be waking up.
-          </p>
-
           {/* Demo credentials */}
           <div className="bg-white/10 p-4 rounded-lg mb-5 text-sm text-gray-200 border border-white/20">
             <p className="font-semibold mb-2 text-white">Demo Credentials:</p>

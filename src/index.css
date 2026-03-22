@@ -1,2 +1,11 @@
 @import "tailwindcss";
 @import "flowbite/src/themes/default";
+
+
+.link {
+  @apply flex items-center gap-3 p-2 rounded transition-all duration-200 hover:bg-gray-800 hover:scale-105;
+}
+
+.submenu {
+  @apply block px-2 py-1 rounded hover:bg-gray-800 transition;
+}

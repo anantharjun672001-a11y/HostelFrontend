@@ -5,9 +5,11 @@ import {
   Home,
   Users,
   Wrench,
+  Toolbox,
   Receipt,
   ChevronDown,
   Menu,
+  Hotel,
 } from "lucide-react";
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
@@ -15,172 +17,186 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   const [openUsers, setOpenUsers] = useState(false);
 
   const location = useLocation();
+
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const role = user?.role || "";
+
   const isActive = (path) => location.pathname === path;
 
+  const baseLink = (path) =>
+    `group flex items-center ${
+      isOpen ? "gap-3" : "justify-center"
+    } p-2 rounded transition-all duration-200 ${
+      isActive(path)
+        ? "bg-blue-600 shadow-lg shadow-blue-500/40 border-l-4 border-white"
+        : "hover:bg-gray-800"
+    }`;
+
+  if (!role) return null;
+
   return (
-    <>
-      {/* Overlay */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/40 md:hidden z-40"
-          onClick={() => setIsOpen(false)}
+    <div
+      className={`fixed top-0 left-0 h-full bg-gray-900 text-white z-50
+      transition-all duration-300 ease-in-out
+      ${isOpen ? "w-64" : "w-16"}`}
+    >
+      
+      <div className="p-4 flex justify-between items-center">
+        {isOpen && <h1 className="font-bold text-lg">Menu</h1>}
+
+        <Menu
+          className="cursor-pointer hover:rotate-90 transition"
+          onClick={() => setIsOpen(!isOpen)}
         />
-      )}
+      </div>
 
-      <div
-        className={`fixed top-0 left-0 h-full bg-gray-900 text-white z-50 
-        transition-all duration-300 ease-in-out
-        ${isOpen ? "w-64" : "w-16"}`}
-      >
+      <nav className="space-y-2 px-2">
 
-        {/* Top */}
-        <div className="p-4 flex justify-between items-center">
-          {isOpen && <h1 className="font-bold text-lg">Admin</h1>}
+        {/* DASHBOARD */}
+        <Link to="/dashboard" className={baseLink("/dashboard")}>
+          <LayoutDashboard size={18} />
+          {isOpen && "Dashboard"}
+        </Link>
 
-          <Menu
-            className="cursor-pointer transition-transform duration-300 hover:rotate-90"
-            onClick={() => setIsOpen(!isOpen)}
-          />
-        </div>
+        {/*  ADMIN  */}
+        {role === "admin" && (
+          <>
+            <Link to="/admin/rooms" className={baseLink("/admin/rooms")}>
+              <Home size={18} />
+              {isOpen && "Rooms"}
+            </Link>
 
-        <nav className="space-y-2 px-2">
+            <Link to="/admin/residents" className={baseLink("/admin/residents")}>
+              <Users size={18} />
+              {isOpen && "Residents"}
+            </Link>
 
-          {/* Dashboard */}
-          <Link
-            to="/dashboard"
-            className={`group flex items-center gap-3 p-2 rounded transition
-            ${isActive("/dashboard") ? "bg-blue-600" : "hover:bg-gray-800"}`}
-          >
-            <LayoutDashboard
-              size={18}
-              className={`transition-all duration-200 
-              ${isActive("/dashboard") ? "scale-110" : "group-hover:scale-110"}`}
-            />
-            {isOpen && "Dashboard"}
-          </Link>
+            <Link to="/admin/maintenance" className={baseLink("/admin/maintenance")}>
+              <Wrench size={18} />
+              {isOpen && "Maintenance"}
+            </Link>
 
-          {/* Rooms */}
-          <Link
-            to="/admin/rooms"
-            className={`group flex items-center gap-3 p-2 rounded transition
-            ${isActive("/admin/rooms") ? "bg-blue-600" : "hover:bg-gray-800"}`}
-          >
-            <Home
-              size={18}
-              className={`transition-all duration-200 
-              ${isActive("/admin/rooms") ? "scale-110" : "group-hover:scale-110"}`}
-            />
-            {isOpen && "Rooms"}
-          </Link>
+            {/* BILLS */}
+            <div>
+              <div className="flex items-center justify-between">
+                <Link to="/admin/bills" className={baseLink("/admin/bills")}>
+                  <Receipt size={18} />
+                  {isOpen && "Bills"}
+                </Link>
 
-          {/* Residents */}
-          <Link
-            to="/admin/residents"
-            className={`group flex items-center gap-3 p-2 rounded transition
-            ${isActive("/admin/residents") ? "bg-blue-600" : "hover:bg-gray-800"}`}
-          >
-            <Users
-              size={18}
-              className={`transition-all duration-200 
-              ${isActive("/admin/residents") ? "scale-110" : "group-hover:scale-110"}`}
-            />
-            {isOpen && "Residents"}
-          </Link>
-
-          {/* Maintenance */}
-          <Link
-            to="/admin/maintenance"
-            className={`group flex items-center gap-3 p-2 rounded transition
-            ${isActive("/admin/maintenance") ? "bg-blue-600" : "hover:bg-gray-800"}`}
-          >
-            <Wrench
-              size={18}
-              className={`transition-all duration-200 
-              ${isActive("/admin/maintenance") ? "scale-110" : "group-hover:scale-110"}`}
-            />
-            {isOpen && "Maintenance"}
-          </Link>
-
-          {/* Bills */}
-          <div>
-            <div className="flex items-center justify-between">
-
-              <Link
-                to="/admin/bills"
-                className="group flex items-center gap-3 p-2 hover:bg-gray-800 rounded w-full"
-              >
-                <Receipt
-                  size={18}
-                  className="transition-transform duration-200 group-hover:scale-110"
-                />
-                {isOpen && "Bills"}
-              </Link>
-
-              {isOpen && (
-                <ChevronDown
-                  size={16}
-                  className={`cursor-pointer mr-2 transition-transform duration-300 
-                  ${openBills ? "rotate-180" : ""}`}
-                  onClick={() => setOpenBills(!openBills)}
-                />
-              )}
-            </div>
-
-            <div
-              className={`ml-8 mt-1 space-y-1 text-sm overflow-hidden transition-all duration-300
-              ${openBills ? "max-h-40" : "max-h-0"}`}
-            >
-              <Link to="/admin/create-bill" className="block px-2 py-1 hover:bg-gray-800 rounded">
-                Create Bill
-              </Link>
-              <Link to="/admin/payments" className="block px-2 py-1 hover:bg-gray-800 rounded">
-                Payments
-              </Link>
-              <Link to="/admin/revenue" className="block px-2 py-1 hover:bg-gray-800 rounded">
-                Revenue
-              </Link>
-            </div>
-          </div>
-
-          {/* Users */}
-          <div>
-            <div
-              onClick={() => setOpenUsers(!openUsers)}
-              className="group flex items-center justify-between p-2 hover:bg-gray-800 rounded cursor-pointer"
-            >
-              <div className="flex items-center gap-3">
-                <Users
-                  size={18}
-                  className="transition-transform duration-200 group-hover:scale-110"
-                />
-                {isOpen && "Users"}
+                {isOpen && (
+                  <ChevronDown
+                    size={16}
+                    onClick={() => setOpenBills(!openBills)}
+                    className={`cursor-pointer mr-2 ${
+                      openBills ? "rotate-180" : ""
+                    }`}
+                  />
+                )}
               </div>
 
-              {isOpen && (
-                <ChevronDown
-                  size={16}
-                  className={`transition-transform duration-300 
-                  ${openUsers ? "rotate-180" : ""}`}
-                />
+              {openBills && isOpen && (
+                <div className="ml-8 flex flex-col space-y-1 text-sm mt-1">
+                  <Link to="/admin/create-bill" className="hover:text-blue-400">
+                    Create Bill
+                  </Link>
+                  <Link to="/admin/payments" className="hover:text-blue-400">
+                    Payments
+                  </Link>
+                  <Link to="/admin/revenue" className="hover:text-blue-400">
+                    Revenue
+                  </Link>
+                </div>
               )}
             </div>
 
-            <div
-              className={`ml-8 mt-1 space-y-1 text-sm overflow-hidden transition-all duration-300
-              ${openUsers ? "max-h-32" : "max-h-0"}`}
-            >
-              <Link to="/admin/create-staff" className="block px-2 py-1 hover:bg-gray-800 rounded">
-                Create Staff
-              </Link>
-              <Link to="/admin/create-user" className="block px-2 py-1 hover:bg-gray-800 rounded">
-                Create User
-              </Link>
-            </div>
-          </div>
+            {/* USERS */}
+            <div>
+              <div
+                onClick={() => setOpenUsers(!openUsers)}
+                className="flex items-center justify-between p-2 hover:bg-gray-800 rounded cursor-pointer"
+              >
+                <div className="flex gap-3">
+                  <Users size={18} />
+                  {isOpen && "Users"}
+                </div>
 
-        </nav>
-      </div>
-    </>
+                {isOpen && (
+                  <ChevronDown
+                    size={16}
+                    className={openUsers ? "rotate-180" : ""}
+                  />
+                )}
+              </div>
+
+              {openUsers && isOpen && (
+                <div className="ml-8 flex flex-col space-y-1 text-sm mt-1">
+                  <Link to="/admin/create-staff" className="hover:text-blue-400">
+                    Create Staff
+                  </Link>
+                  <Link to="/admin/create-user" className="hover:text-blue-400">
+                    Create User
+                  </Link>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+
+        {/*  STAFF  */}
+
+        {role === "staff" && (
+          <>
+            <Link to="/admin/rooms" className={baseLink("/admin/rooms")}>
+              <Home size={18} />
+              {isOpen && "Rooms"}
+            </Link>
+
+            <Link to="/admin/residents" className={baseLink("/admin/residents")}>
+              <Users size={18} />
+              {isOpen && "Residents"}
+            </Link>
+
+            <Link to="/admin/maintenance" className={baseLink("/admin/maintenance")}>
+              <Wrench size={18} />
+              {isOpen && "Maintenance"}
+            </Link>
+          </>
+        )}
+
+        {/*  RESIDENT  */}
+
+        {role === "resident" && (
+          <>
+            <Link to="/resident/rooms" className={baseLink("/resident/rooms")}>
+              <Hotel size={18} />
+              {isOpen && "Rooms"}
+            </Link>
+
+            <Link to="/resident/my-room" className={baseLink("/resident/my-room")}>
+              <Home size={18} />
+              {isOpen && "My Room"}
+            </Link>
+
+            <Link to="/resident/bills" className={baseLink("/resident/bills")}>
+              <Receipt size={18} />
+              {isOpen && "My Bills"}
+            </Link>
+
+            <Link to="/resident/maintenance/create" className={baseLink("/resident/maintenance/create")}>
+              <Wrench size={18} />
+              {isOpen && "Create Request"}
+            </Link>
+
+            <Link to="/resident/maintenance" className={baseLink("/resident/maintenance")}>
+              <Toolbox size={18} />
+              {isOpen && "Maintenance"}
+            </Link>
+          </>
+        )}
+
+      </nav>
+    </div>
   );
 };
 

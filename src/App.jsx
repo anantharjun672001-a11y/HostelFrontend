@@ -11,6 +11,7 @@ import Home from "./pages/Home";
 
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
+import RoleRoute from "./components/RoleRoute";
 
 import AdminCreateBill from "./pages/AdminCreateBill";
 import Rooms from "./pages/admin/Rooms";
@@ -45,11 +46,11 @@ const App = () => {
         <Layout>
           <Routes>
 
-            {/*  PUBLIC */}
+            {/* PUBLIC */}
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
 
-            {/* DASHBOARD MAIN */}
+            {/* DASHBOARD */}
             <Route
               path="/dashboard"
               element={
@@ -61,113 +62,17 @@ const App = () => {
               }
             />
 
-            {/* ADMIN ROUTES */}
+            {/*  ADMIN ONLY  */}
+
             <Route
               path="/admin/create-bill"
               element={
                 <PrivateRoute>
-                  <DashboardLayout>
-                    <AdminCreateBill />
-                  </DashboardLayout>
-                </PrivateRoute>
-              }
-            />
-
-            <Route
-              path="/admin/rooms"
-              element={
-                <PrivateRoute>
-                  <DashboardLayout>
-                    <Rooms />
-                  </DashboardLayout>
-                </PrivateRoute>
-              }
-            />
-
-            <Route
-              path="/admin/rooms/create"
-              element={
-                <PrivateRoute>
-                  <DashboardLayout>
-                    <CreateRoom />
-                  </DashboardLayout>
-                </PrivateRoute>
-              }
-            />
-
-            <Route
-              path="/admin/rooms/assign"
-              element={
-                <PrivateRoute>
-                  <DashboardLayout>
-                    <AssignRoom />
-                  </DashboardLayout>
-                </PrivateRoute>
-              }
-            />
-
-            <Route
-              path="/admin/residents"
-              element={
-                <PrivateRoute>
-                  <DashboardLayout>
-                    <Residents />
-                  </DashboardLayout>
-                </PrivateRoute>
-              }
-            />
-
-            <Route
-              path="/admin/residents/create"
-              element={
-                <PrivateRoute>
-                  <DashboardLayout>
-                    <CreateResident />
-                  </DashboardLayout>
-                </PrivateRoute>
-              }
-            />
-
-            <Route
-              path="/admin/residents/edit/:id"
-              element={
-                <PrivateRoute>
-                  <DashboardLayout>
-                    <EditResident />
-                  </DashboardLayout>
-                </PrivateRoute>
-              }
-            />
-
-            <Route
-              path="/admin/maintenance"
-              element={
-                <PrivateRoute>
-                  <DashboardLayout>
-                    <AdminMaintenance />
-                  </DashboardLayout>
-                </PrivateRoute>
-              }
-            />
-
-            <Route
-              path="/admin/bills"
-              element={
-                <PrivateRoute>
-                  <DashboardLayout>
-                    <Bills />
-                  </DashboardLayout>
-                </PrivateRoute>
-              }
-            />
-
-            <Route
-              path="/admin/payments"
-              element={
-                <PrivateRoute>
-                  <DashboardLayout>
-                    <Payments />
-                  </DashboardLayout>
+                  <RoleRoute allowedRoles={["admin"]}>
+                    <DashboardLayout>
+                      <AdminCreateBill />
+                    </DashboardLayout>
+                  </RoleRoute>
                 </PrivateRoute>
               }
             />
@@ -176,9 +81,11 @@ const App = () => {
               path="/admin/revenue"
               element={
                 <PrivateRoute>
-                  <DashboardLayout>
-                    <RevenueReport />
-                  </DashboardLayout>
+                  <RoleRoute allowedRoles={["admin"]}>
+                    <DashboardLayout>
+                      <RevenueReport />
+                    </DashboardLayout>
+                  </RoleRoute>
                 </PrivateRoute>
               }
             />
@@ -187,9 +94,11 @@ const App = () => {
               path="/admin/create-staff"
               element={
                 <PrivateRoute>
-                  <DashboardLayout>
-                    <CreateStaff />
-                  </DashboardLayout>
+                  <RoleRoute allowedRoles={["admin"]}>
+                    <DashboardLayout>
+                      <CreateStaff />
+                    </DashboardLayout>
+                  </RoleRoute>
                 </PrivateRoute>
               }
             />
@@ -198,21 +107,145 @@ const App = () => {
               path="/admin/create-user"
               element={
                 <PrivateRoute>
-                  <DashboardLayout>
-                    <CreateUsers />
-                  </DashboardLayout>
+                  <RoleRoute allowedRoles={["admin"]}>
+                    <DashboardLayout>
+                      <CreateUsers />
+                    </DashboardLayout>
+                  </RoleRoute>
                 </PrivateRoute>
               }
             />
 
-            {/* 🔵 RESIDENT ROUTES */}
+            {/*  ADMIN + STAFF  */}
+
+            <Route
+              path="/admin/rooms"
+              element={
+                <PrivateRoute>
+                  <RoleRoute allowedRoles={["admin", "staff"]}>
+                    <DashboardLayout>
+                      <Rooms />
+                    </DashboardLayout>
+                  </RoleRoute>
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/admin/rooms/create"
+              element={
+                <PrivateRoute>
+                  <RoleRoute allowedRoles={["admin", "staff"]}>
+                    <DashboardLayout>
+                      <CreateRoom />
+                    </DashboardLayout>
+                  </RoleRoute>
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/admin/rooms/assign"
+              element={
+                <PrivateRoute>
+                  <RoleRoute allowedRoles={["admin", "staff"]}>
+                    <DashboardLayout>
+                      <AssignRoom />
+                    </DashboardLayout>
+                  </RoleRoute>
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/admin/residents"
+              element={
+                <PrivateRoute>
+                  <RoleRoute allowedRoles={["admin", "staff"]}>
+                    <DashboardLayout>
+                      <Residents />
+                    </DashboardLayout>
+                  </RoleRoute>
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/admin/residents/create"
+              element={
+                <PrivateRoute>
+                  <RoleRoute allowedRoles={["admin", "staff"]}>
+                    <DashboardLayout>
+                      <CreateResident />
+                    </DashboardLayout>
+                  </RoleRoute>
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/admin/residents/edit/:id"
+              element={
+                <PrivateRoute>
+                  <RoleRoute allowedRoles={["admin", "staff"]}>
+                    <DashboardLayout>
+                      <EditResident />
+                    </DashboardLayout>
+                  </RoleRoute>
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/admin/maintenance"
+              element={
+                <PrivateRoute>
+                  <RoleRoute allowedRoles={["admin", "staff"]}>
+                    <DashboardLayout>
+                      <AdminMaintenance />
+                    </DashboardLayout>
+                  </RoleRoute>
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/admin/bills"
+              element={
+                <PrivateRoute>
+                  <RoleRoute allowedRoles={["admin", "staff"]}>
+                    <DashboardLayout>
+                      <Bills />
+                    </DashboardLayout>
+                  </RoleRoute>
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/admin/payments"
+              element={
+                <PrivateRoute>
+                  <RoleRoute allowedRoles={["admin", "staff"]}>
+                    <DashboardLayout>
+                      <Payments />
+                    </DashboardLayout>
+                  </RoleRoute>
+                </PrivateRoute>
+              }
+            />
+
+            {/* RESIDENT  */}
+
             <Route
               path="/resident/rooms"
               element={
                 <PrivateRoute>
-                  <DashboardLayout>
-                    <AvailableRooms />
-                  </DashboardLayout>
+                  <RoleRoute allowedRoles={["resident"]}>
+                    <DashboardLayout>
+                      <AvailableRooms />
+                    </DashboardLayout>
+                  </RoleRoute>
                 </PrivateRoute>
               }
             />
@@ -221,9 +254,11 @@ const App = () => {
               path="/resident/my-room"
               element={
                 <PrivateRoute>
-                  <DashboardLayout>
-                    <MyRoom />
-                  </DashboardLayout>
+                  <RoleRoute allowedRoles={["resident"]}>
+                    <DashboardLayout>
+                      <MyRoom />
+                    </DashboardLayout>
+                  </RoleRoute>
                 </PrivateRoute>
               }
             />
@@ -232,9 +267,11 @@ const App = () => {
               path="/resident/maintenance/create"
               element={
                 <PrivateRoute>
-                  <DashboardLayout>
-                    <CreateMaintenance />
-                  </DashboardLayout>
+                  <RoleRoute allowedRoles={["resident"]}>
+                    <DashboardLayout>
+                      <CreateMaintenance />
+                    </DashboardLayout>
+                  </RoleRoute>
                 </PrivateRoute>
               }
             />
@@ -243,9 +280,11 @@ const App = () => {
               path="/resident/maintenance"
               element={
                 <PrivateRoute>
-                  <DashboardLayout>
-                    <MyMaintenance />
-                  </DashboardLayout>
+                  <RoleRoute allowedRoles={["resident"]}>
+                    <DashboardLayout>
+                      <MyMaintenance />
+                    </DashboardLayout>
+                  </RoleRoute>
                 </PrivateRoute>
               }
             />
@@ -254,9 +293,11 @@ const App = () => {
               path="/resident/bills"
               element={
                 <PrivateRoute>
-                  <DashboardLayout>
-                    <MyBills />
-                  </DashboardLayout>
+                  <RoleRoute allowedRoles={["resident"]}>
+                    <DashboardLayout>
+                      <MyBills />
+                    </DashboardLayout>
+                  </RoleRoute>
                 </PrivateRoute>
               }
             />
