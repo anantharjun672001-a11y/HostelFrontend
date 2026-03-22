@@ -1,5 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { Bell } from "lucide-react";
+import NotificationBell from "./NotificationBell";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -48,12 +49,7 @@ const Navbar = () => {
           <div className="flex items-center gap-5">
 
             {/*  Resident only */}
-            {role === "resident" && (
-              <div className="relative cursor-pointer">
-                <Bell className="text-gray-700 hover:text-gray-900 transition-transform duration-200 hover:scale-110" />
-                <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-              </div>
-            )}
+            {role === "resident" && <NotificationBell />}
 
             {/*  Profile */}
             <div className="flex items-center gap-2">
