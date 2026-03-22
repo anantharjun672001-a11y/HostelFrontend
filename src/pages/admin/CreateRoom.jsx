@@ -8,30 +8,76 @@ const CreateRoom = () => {
     roomNumber: "",
     type: "",
     capacity: "",
+    price: "",
+    image: "",
+    facilities: [],
   });
+
+  const [imageFile, setImageFile] = useState(null);
 
   const navigate = useNavigate();
 
+  // handle input change
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // handle facilities (comma separated)
+  const handleFacilities = (e) => {
+    const value = e.target.value;
+    setForm({ ...form, facilities: value.split(",") });
+  };
+
+  // image select
+  const handleImageChange = (e) => {
+    setImageFile(e.target.files[0]);
+  };
+
+  // upload image to backend (cloudinary)
+  const uploadImage = async () => {
+    if (!imageFile) return "";
+
+    const formData = new FormData();
+    formData.append("image", imageFile);
+
+    try {
+      const res = await axios.post(
+        "https://hostelbackend-uzne.onrender.com/api/upload",
+        formData
+      );
+
+      return res.data.url;
+    } catch (err) {
+      toast.error("Image upload failed");
+      return "";
+    }
+  };
+
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      // upload image first
+      const imageUrl = await uploadImage();
+
+      const finalData = {
+        ...form,
+        image: imageUrl,
+      };
+
       const res = await axios.post(
         "https://hostelbackend-uzne.onrender.com/api/room/create",
-        form,
+        finalData,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        },
+        }
       );
 
       if (res.status === 201) {
-        toast.success("Room created successfully");
+        toast.success("Room created successfully ");
         navigate("/admin/rooms");
       }
     } catch (error) {
@@ -41,7 +87,6 @@ const CreateRoom = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-
       <div className="bg-white border border-gray-100 shadow-md rounded-xl p-8">
 
         <h2 className="text-2xl font-bold text-gray-800 mb-6">
@@ -50,64 +95,69 @@ const CreateRoom = () => {
 
         <form onSubmit={handleSubmit} className="space-y-5">
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Room Number
-            </label>
+          
+          <input
+            type="text"
+            name="roomNumber"
+            placeholder="Room Number"
+            className="w-full border px-3 py-2 rounded-lg"
+            onChange={handleChange}
+            required
+          />
 
-            <input
-              type="text"
-              name="roomNumber"
-              placeholder="Enter room number"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Room Type
-            </label>
-
-            <select
-              name="type"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              onChange={handleChange}
-            >
-              <option value="">Select Type</option>
-              <option value="double">Double</option>
-              <option value="triple">Triple</option>
-              <option value="quad">Quad</option>
-              <option value="queen">Queen</option>
-              <option value="king">King</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Capacity
-            </label>
-
-            <input
-              type="number"
-              name="capacity"
-              placeholder="Enter capacity"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              onChange={handleChange}
-            />
-          </div>
-
-          <button
-            className="w-full bg-blue-600 hover:bg-blue-700 transition text-white font-medium py-2.5 rounded-lg"
+          
+          <select
+            name="type"
+            className="w-full border px-3 py-2 rounded-lg"
+            onChange={handleChange}
           >
+            <option value="">Select Type</option>
+            <option value="double">Double</option>
+            <option value="triple">Triple</option>
+            <option value="quad">Quad</option>
+            <option value="queen">Queen</option>
+            <option value="king">King</option>
+          </select>
+
+          
+          <input
+            type="number"
+            name="capacity"
+            placeholder="Capacity"
+            className="w-full border px-3 py-2 rounded-lg"
+            onChange={handleChange}
+          />
+
+        
+          <input
+            type="number"
+            name="price"
+            placeholder="Price"
+            className="w-full border px-3 py-2 rounded-lg"
+            onChange={handleChange}
+          />
+
+          
+          <input
+            type="text"
+            placeholder="Facilities (AC,WiFi,TV)"
+            className="w-full border px-3 py-2 rounded-lg"
+            onChange={handleFacilities}
+          />
+
+         
+          <input
+            type="file"
+            className="w-full border px-3 py-2 rounded-lg"
+            onChange={handleImageChange}
+          />
+
+          <button className="w-full bg-blue-600 hover:bg-blue-700 transition text-white py-2.5 rounded-lg">
             Create Room
           </button>
 
         </form>
-
       </div>
-
     </div>
   );
 };
