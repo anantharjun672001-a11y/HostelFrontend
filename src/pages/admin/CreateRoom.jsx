@@ -20,9 +20,32 @@ const CreateRoom = () => {
 
   const API = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
+  // AUTO CONFIG 
+  const roomConfig = {
+    king: { capacity: 6, price: 5500 },
+    queen: { capacity: 5, price: 6600 },
+    quad: { capacity: 4, price: 7700 },
+    triple: { capacity: 3, price: 8800 },
+    double: { capacity: 2, price: 9900 },
+  };
+
   // handle input
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    // type select → auto set capacity & price
+    if (name === "type") {
+      const config = roomConfig[value];
+
+      setForm({
+        ...form,
+        type: value,
+        capacity: config.capacity,
+        price: config.price,
+      });
+    } else {
+      setForm({ ...form, [name]: value });
+    }
   };
 
   // facilities
@@ -35,7 +58,7 @@ const CreateRoom = () => {
     setImageFile(e.target.files[0]);
   };
 
-  //  upload image
+  // upload image
   const uploadImage = async () => {
     if (!imageFile) return "";
 
@@ -43,26 +66,17 @@ const CreateRoom = () => {
     formData.append("image", imageFile);
 
     try {
-      console.log("Uploading image...");
-
       const res = await axios.post(`${API}/api/upload`, formData);
-
-      console.log("Upload success:", res.data);
-
       return res.data.url;
     } catch (err) {
-      console.log("Upload error:", err);
       toast.error("Image upload failed ");
       return "";
     }
   };
 
-  // submit
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log("SUBMIT CLICKED ");
-
     setLoading(true);
 
     try {
@@ -78,26 +92,17 @@ const CreateRoom = () => {
         image: imageUrl,
       };
 
-      console.log("Sending data:", finalData);
-
-      const res = await axios.post(
-        `${API}/api/room/create`,
-        finalData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      console.log("Response:", res);
+      const res = await axios.post(`${API}/api/room/create`, finalData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
       if (res.status === 201) {
         toast.success("Room created successfully ");
         navigate("/admin/rooms");
       }
     } catch (error) {
-      console.log("ERROR:", error);
       toast.error(error.response?.data?.message || "Error creating room");
     } finally {
       setLoading(false);
@@ -105,79 +110,113 @@ const CreateRoom = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <div className="bg-white border shadow-md rounded-xl p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center p-6">
+      <div className="w-full max-w-2xl bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-xl p-8 border border-gray-200">
+        <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center tracking-wide">
+          Create Room
+        </h2>
 
-        <h2 className="text-2xl font-bold mb-6">Create Room</h2>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          
+          <div>
+            <label className="text-sm font-medium text-gray-600 mb-1 block">
+              Room Number
+            </label>
+            <input
+              type="text"
+              name="roomNumber"
+              placeholder="Enter room number"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none hover:border-gray-400"
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+          
+          <div>
+            <label className="text-sm font-medium text-gray-600 mb-1 block">
+              Room Type
+            </label>
+            <select
+              name="type"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none hover:border-gray-400"
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select Type</option>
+              <option value="king">King</option>
+              <option value="queen">Queen</option>
+              <option value="quad">Quad</option>
+              <option value="triple">Triple</option>
+              <option value="double">Double</option>
+            </select>
+          </div>
 
-          <input
-            type="text"
-            name="roomNumber"
-            placeholder="Room Number"
-            className="w-full border px-3 py-2 rounded-lg"
-            onChange={handleChange}
-            required
-          />
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium text-gray-600 mb-1 block">
+                Capacity
+              </label>
+              <input
+                type="number"
+                value={form.capacity}
+                readOnly
+                className="w-full border border-gray-200 bg-gray-100 rounded-lg px-4 py-2 text-gray-600"
+              />
+            </div>
 
-          <select
-            name="type"
-            className="w-full border px-3 py-2 rounded-lg"
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select Type</option>
-            <option value="double">Double</option>
-            <option value="triple">Triple</option>
-            <option value="quad">Quad</option>
-            <option value="queen">Queen</option>
-            <option value="king">King</option>
-          </select>
+            <div>
+              <label className="text-sm font-medium text-gray-600 mb-1 block">
+                Price (₹)
+              </label>
+              <input
+                type="number"
+                value={form.price}
+                readOnly
+                className="w-full border border-gray-200 bg-gray-100 rounded-lg px-4 py-2 text-gray-600"
+              />
+            </div>
+          </div>
 
-          <input
-            type="number"
-            name="capacity"
-            placeholder="Capacity"
-            className="w-full border px-3 py-2 rounded-lg"
-            onChange={handleChange}
-            required
-          />
+          
+          <div>
+            <label className="text-sm font-medium text-gray-600 mb-1 block">
+              Facilities
+            </label>
+            <input
+              type="text"
+              placeholder="AC, WiFi, TV"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none hover:border-gray-400"
+              onChange={handleFacilities}
+            />
+          </div>
 
-          <input
-            type="number"
-            name="price"
-            placeholder="Price"
-            className="w-full border px-3 py-2 rounded-lg"
-            onChange={handleChange}
-          />
+          
+          <div>
+            <label className="text-sm font-medium text-gray-600 mb-1 block">
+              Room Image
+            </label>
+            <input
+              type="file"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 cursor-pointer hover:border-gray-400 transition"
+              onChange={handleImageChange}
+              required
+            />
+          </div>
 
-          <input
-            type="text"
-            placeholder="Facilities (AC,WiFi,TV)"
-            className="w-full border px-3 py-2 rounded-lg"
-            onChange={handleFacilities}
-          />
-
-          <input
-            type="file"
-            className="w-full border px-3 py-2 rounded-lg"
-            onChange={handleImageChange}
-            required
-          />
-
+          
           <button
             type="submit"
             disabled={loading}
-            className={`w-full text-white py-2.5 rounded-lg transition ${
+            className={`w-full py-3 rounded-xl text-white font-semibold transition-all duration-300 transform ${
               loading
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700"
+                : "bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 hover:scale-[1.03] active:scale-95 shadow-md hover:shadow-lg"
             }`}
           >
             {loading ? "Creating..." : "Create Room"}
           </button>
-
         </form>
       </div>
     </div>

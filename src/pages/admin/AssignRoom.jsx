@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const AssignRoom = () => {
-
   const navigate = useNavigate();
 
   const [residents, setResidents] = useState([]);
@@ -17,7 +16,6 @@ const AssignRoom = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-
       const resResidents = await axios.get(
         "https://hostelbackend-uzne.onrender.com/api/resident",
         {
@@ -46,7 +44,6 @@ const AssignRoom = () => {
     e.preventDefault();
 
     try {
-
       await axios.post(
         "https://hostelbackend-uzne.onrender.com/api/room/assign",
         form,
@@ -64,30 +61,18 @@ const AssignRoom = () => {
         roomId: "",
       });
 
-      
       navigate("/admin/rooms");
-
     } catch (error) {
-
-      toast.error(
-        error.response?.data?.message || "Error assigning room"
-      );
-
+      toast.error(error.response?.data?.message || "Error assigning room");
     }
   };
 
   return (
-
     <div className="max-w-3xl mx-auto p-6">
-
       <div className="bg-white border border-gray-100 shadow-md rounded-xl p-8">
-
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">
-          Assign Room
-        </h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">Assign Room</h2>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Select Resident
@@ -130,16 +115,11 @@ const AssignRoom = () => {
             </select>
           </div>
 
-          <button
-            className="w-full bg-blue-600 hover:bg-blue-700 transition text-white font-medium py-2.5 rounded-lg"
-          >
+          <button className="w-full bg-blue-600 hover:bg-blue-700 transition text-white font-medium py-2.5 rounded-lg">
             Assign Room
           </button>
-
         </form>
-
       </div>
-
     </div>
   );
 };
