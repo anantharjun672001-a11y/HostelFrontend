@@ -14,18 +14,20 @@ const CreateRoom = () => {
   });
 
   const [imageFile, setImageFile] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
-  // handle input change
+  const API = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
+  // handle input
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // handle facilities (comma separated)
+  // facilities
   const handleFacilities = (e) => {
-    const value = e.target.value;
-    setForm({ ...form, facilities: value.split(",") });
+    setForm({ ...form, facilities: e.target.value.split(",") });
   };
 
   // image select
@@ -33,7 +35,7 @@ const CreateRoom = () => {
     setImageFile(e.target.files[0]);
   };
 
-  // upload image to backend (cloudinary)
+  //  upload image
   const uploadImage = async () => {
     if (!imageFile) return "";
 
@@ -41,33 +43,45 @@ const CreateRoom = () => {
     formData.append("image", imageFile);
 
     try {
-      const res = await axios.post(
-        "https://hostelbackend-uzne.onrender.com/api/upload",
-        formData
-      );
+      console.log("Uploading image...");
+
+      const res = await axios.post(`${API}/api/upload`, formData);
+
+      console.log("Upload success:", res.data);
 
       return res.data.url;
     } catch (err) {
-      toast.error("Image upload failed");
+      console.log("Upload error:", err);
+      toast.error("Image upload failed ");
       return "";
     }
   };
 
-  
+  // submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    console.log("SUBMIT CLICKED ");
+
+    setLoading(true);
+
     try {
-      // upload image first
       const imageUrl = await uploadImage();
+
+      if (!imageUrl) {
+        setLoading(false);
+        return;
+      }
 
       const finalData = {
         ...form,
         image: imageUrl,
       };
 
+      console.log("Sending data:", finalData);
+
       const res = await axios.post(
-        "https://hostelbackend-uzne.onrender.com/api/room/create",
+        `${API}/api/room/create`,
         finalData,
         {
           headers: {
@@ -76,26 +90,28 @@ const CreateRoom = () => {
         }
       );
 
+      console.log("Response:", res);
+
       if (res.status === 201) {
         toast.success("Room created successfully ");
         navigate("/admin/rooms");
       }
     } catch (error) {
+      console.log("ERROR:", error);
       toast.error(error.response?.data?.message || "Error creating room");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <div className="bg-white border border-gray-100 shadow-md rounded-xl p-8">
+      <div className="bg-white border shadow-md rounded-xl p-8">
 
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">
-          Create Room
-        </h2>
+        <h2 className="text-2xl font-bold mb-6">Create Room</h2>
 
         <form onSubmit={handleSubmit} className="space-y-5">
 
-          
           <input
             type="text"
             name="roomNumber"
@@ -105,11 +121,11 @@ const CreateRoom = () => {
             required
           />
 
-          
           <select
             name="type"
             className="w-full border px-3 py-2 rounded-lg"
             onChange={handleChange}
+            required
           >
             <option value="">Select Type</option>
             <option value="double">Double</option>
@@ -119,16 +135,15 @@ const CreateRoom = () => {
             <option value="king">King</option>
           </select>
 
-          
           <input
             type="number"
             name="capacity"
             placeholder="Capacity"
             className="w-full border px-3 py-2 rounded-lg"
             onChange={handleChange}
+            required
           />
 
-        
           <input
             type="number"
             name="price"
@@ -137,7 +152,6 @@ const CreateRoom = () => {
             onChange={handleChange}
           />
 
-          
           <input
             type="text"
             placeholder="Facilities (AC,WiFi,TV)"
@@ -145,15 +159,23 @@ const CreateRoom = () => {
             onChange={handleFacilities}
           />
 
-         
           <input
             type="file"
             className="w-full border px-3 py-2 rounded-lg"
             onChange={handleImageChange}
+            required
           />
 
-          <button className="w-full bg-blue-600 hover:bg-blue-700 transition text-white py-2.5 rounded-lg">
-            Create Room
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full text-white py-2.5 rounded-lg transition ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
+          >
+            {loading ? "Creating..." : "Create Room"}
           </button>
 
         </form>
