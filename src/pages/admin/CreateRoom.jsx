@@ -23,7 +23,7 @@ const CreateRoom = () => {
     import.meta.env.VITE_API_URL ||
     "https://hostelbackend-uzne.onrender.com";
 
-  // Auto config for room
+  
   const roomConfig = {
     king: { capacity: 6, price: 5500 },
     queen: { capacity: 5, price: 6600 },
@@ -32,7 +32,7 @@ const CreateRoom = () => {
     double: { capacity: 2, price: 9900 },
   };
 
-  // Handle input
+ 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -215,7 +215,10 @@ const CreateRoom = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-3 rounded-xl text-white font-semibold transition ${
+            className={`w-full py-2.5 rounded-xl text-white font-medium
+              bg-gradient-to-r from-blue-500 to-indigo-600
+             hover:from-indigo-600 hover:to-blue-500
+               shadow-md hover:shadow-xl transition ${
               loading
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-blue-600 hover:bg-blue-700"

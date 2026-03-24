@@ -28,13 +28,10 @@ const Navbar = () => {
 
   return (
     <nav className="bg-gradient-to-r from-[#F3E3D0] via-[#D2C4B4] via-[#AACDDC] to-[#81A6C6] shadow-md">
-
       <div
         className={`flex items-center justify-between px-6 py-3 
         ${isDashboardPage ? "md:ml-64" : ""}`}
       >
-
-        
         <h1
           onClick={handleLogoClick}
           className={`text-xl font-bold text-gray-800 
@@ -45,15 +42,10 @@ const Navbar = () => {
 
         {/* Logged OUT → only logo */}
         {!user ? null : (
-
           <div className="flex items-center gap-5">
-
-            
             {role === "resident" && <NotificationBell />}
 
-           
             <div className="flex items-center gap-2">
-
               <div className="w-8 h-8 bg-[#81A6C6] text-white flex items-center justify-center rounded-full font-semibold">
                 {user.name ? user.name[0].toUpperCase() : "U"}
               </div>
@@ -63,14 +55,17 @@ const Navbar = () => {
               </span>
             </div>
 
-            
             <button
               onClick={logout}
-              className="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-sm transition"
+              className="px-4 py-1.5 rounded-xl text-white text-sm font-medium
+              bg-gradient-to-r from-red-500 to-pink-500
+             hover:from-pink-500 hover:to-red-500
+              shadow-md hover:shadow-xl
+              transition-all duration-300
+              transform hover:scale-105 active:scale-95"
             >
               Logout
             </button>
-
           </div>
         )}
       </div>
