@@ -10,7 +10,7 @@ const RoomTable = ({ search = "", filter = "all" }) => {
   const navigate = useNavigate();
 
   const itemsPerPage = 10;
-  const API = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  const API = import.meta.env.VITE_API_URL ;
 
   
   const fetchRooms = async () => {
@@ -37,7 +37,7 @@ const RoomTable = ({ search = "", filter = "all" }) => {
         },
       });
 
-      toast.success("Room deleted ✅");
+      toast.success("Room deleted ");
       fetchRooms();
     } catch (err) {
       toast.error("Delete failed ");

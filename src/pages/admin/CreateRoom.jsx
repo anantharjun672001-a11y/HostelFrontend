@@ -18,7 +18,7 @@ const CreateRoom = () => {
 
   const navigate = useNavigate();
 
-  const API = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  const API = import.meta.env.VITE_API_URL ;
 
   // AUTO CONFIG 
   const roomConfig = {
@@ -67,6 +67,7 @@ const CreateRoom = () => {
 
     try {
       const res = await axios.post(`${API}/api/upload`, formData);
+      
       return res.data.url;
     } catch (err) {
       toast.error("Image upload failed ");

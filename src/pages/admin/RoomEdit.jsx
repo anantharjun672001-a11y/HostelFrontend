@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const RoomEdit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const API = import.meta.env.VITE_API_URL;
 
   const [form, setForm] = useState({
     roomNumber: "",
@@ -13,74 +16,97 @@ const RoomEdit = () => {
     price: "",
     facilities: [],
     image: "",
-    
   });
 
   const [imageFile, setImageFile] = useState(null);
+  const [loading, setLoading] = useState(false);
 
+  //FETCH ROOM
   useEffect(() => {
     const fetchRoom = async () => {
-  const res = axios.get(`https://stay-hive.onrender.com/api/room/${id}`, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  });
+      try {
+        const res = await axios.get(`${API}/api/room/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
 
+        const data = res.data.room || res.data;
 
-  console.log(res.data); 
-
-  setForm({
-    roomNumber: res.data.room?.roomNumber || "",
-    type: res.data.room?.type || "",
-    capacity: res.data.room?.capacity || "",
-    price: res.data.room?.price || "",
-    image: res.data.room?.image || "",
-    facilities: res.data.room?.facilities || [],
-  });
-};
+        setForm({
+          roomNumber: data.roomNumber || "",
+          type: data.type || "",
+          capacity: data.capacity || "",
+          price: data.price || "",
+          image: data.image || "",
+          facilities: data.facilities || [],
+        });
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to load room data");
+      }
+    };
 
     fetchRoom();
-  }, [id]);
+  }, [id, API]);
 
+ 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+
 
   const handleFacilities = (e) => {
     setForm({ ...form, facilities: e.target.value.split(",") });
   };
 
+
   const handleImage = (e) => {
     setImageFile(e.target.files[0]);
   };
 
+  // UPLOAD IMAGE
   const uploadImage = async () => {
     if (!imageFile) return form.image;
 
     const formData = new FormData();
     formData.append("image", imageFile);
 
-    const res = await axios.post("/api/upload", formData);
-    return res.data.url;
+    try {
+      const res = await axios.post(`${API}/api/upload`, formData);
+      return res.data.url;
+    } catch (err) {
+      toast.error("Image upload failed");
+      return form.image;
+    }
   };
 
+  // UPDATE ROOM
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    const imageUrl = await uploadImage();
+    try {
+      const imageUrl = await uploadImage();
 
-    await axios.put(
-      `/api/room/${id}`,
-      { ...form, image: imageUrl },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
+      await axios.put(
+        `${API}/api/room/${id}`,
+        { ...form, image: imageUrl },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
 
-    alert("Updated successfully");
-    navigate("/admin/rooms");
+      toast.success("Room updated successfully");
+      navigate("/admin/rooms");
+    } catch (err) {
+      console.error(err);
+      toast.error("Update failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -93,17 +119,16 @@ const RoomEdit = () => {
 
         <form onSubmit={handleSubmit} className="space-y-5">
 
-          
+         
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Room Number
             </label>
             <input
               name="roomNumber"
-              value={form.roomNumber}
+              value={form.roomNumber || ""}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              placeholder="Enter room number"
             />
           </div>
 
@@ -114,16 +139,16 @@ const RoomEdit = () => {
             </label>
             <select
               name="type"
-              value={form.type}
+              value={form.type || ""}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             >
               <option value="">Select type</option>
-              <option value="single">Double</option>
-              <option value="double">Triple</option>
-              <option value="quad">Quad</option>
-              <option value="queen">Queen</option>
               <option value="king">King</option>
+              <option value="queen">Queen</option>
+              <option value="quad">Quad</option>
+              <option value="triple">Triple</option>
+              <option value="double">Double</option>
             </select>
           </div>
 
@@ -134,10 +159,9 @@ const RoomEdit = () => {
             </label>
             <input
               name="capacity"
-              value={form.capacity}
+              value={form.capacity || ""}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              placeholder="Enter capacity"
             />
           </div>
 
@@ -148,10 +172,9 @@ const RoomEdit = () => {
             </label>
             <input
               name="price"
-              value={form.price}
+              value={form.price || ""}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              placeholder="Enter price"
             />
           </div>
 
@@ -183,9 +206,14 @@ const RoomEdit = () => {
           
           <button
             type="submit"
-            className="w-full bg-green-500 hover:bg-green-600 transition text-white font-semibold py-2.5 rounded-lg shadow-md"
+            disabled={loading}
+            className={`w-full text-white font-semibold py-2.5 rounded-lg shadow-md transition ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-green-500 hover:bg-green-600"
+            }`}
           >
-            Update Room
+            {loading ? "Updating..." : "Update Room"}
           </button>
 
         </form>
