@@ -11,28 +11,37 @@ const RoomEdit = () => {
     type: "",
     capacity: "",
     price: "",
-    image: "",
     facilities: [],
+    image: "",
+    
   });
 
   const [imageFile, setImageFile] = useState(null);
 
-  // fetch data
   useEffect(() => {
     const fetchRoom = async () => {
-      const res = await axios.get(`/api/room/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+  const res = axios.get(`https://stay-hive.onrender.com/api/room/${id}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
 
-      setForm(res.data);
-    };
+
+  console.log(res.data); 
+
+  setForm({
+    roomNumber: res.data.room?.roomNumber || "",
+    type: res.data.room?.type || "",
+    capacity: res.data.room?.capacity || "",
+    price: res.data.room?.price || "",
+    image: res.data.room?.image || "",
+    facilities: res.data.room?.facilities || [],
+  });
+};
 
     fetchRoom();
   }, [id]);
 
-  // change
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -45,7 +54,6 @@ const RoomEdit = () => {
     setImageFile(e.target.files[0]);
   };
 
-  // upload image
   const uploadImage = async () => {
     if (!imageFile) return form.image;
 
@@ -56,7 +64,6 @@ const RoomEdit = () => {
     return res.data.url;
   };
 
-  // update
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -72,32 +79,117 @@ const RoomEdit = () => {
       }
     );
 
-    alert("Updated successfully ");
+    alert("Updated successfully");
     navigate("/admin/rooms");
   };
 
   return (
-    <div className="p-6">
-      <h2>Edit Room</h2>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+      <div className="w-full max-w-2xl bg-white shadow-xl rounded-xl p-8">
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+          Edit Room
+        </h2>
 
-        <input name="roomNumber" value={form.roomNumber} onChange={handleChange} />
-        <input name="capacity" value={form.capacity} onChange={handleChange} />
-        <input name="price" value={form.price} onChange={handleChange} />
+        <form onSubmit={handleSubmit} className="space-y-5">
 
-        <input
-          placeholder="Facilities (AC,WiFi)"
-          onChange={handleFacilities}
-        />
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Room Number
+            </label>
+            <input
+              name="roomNumber"
+              value={form.roomNumber}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Enter room number"
+            />
+          </div>
 
-        <input type="file" onChange={handleImage} />
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Room Type
+            </label>
+            <select
+              name="type"
+              value={form.type}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            >
+              <option value="">Select type</option>
+              <option value="single">Double</option>
+              <option value="double">Triple</option>
+              <option value="quad">Quad</option>
+              <option value="queen">Queen</option>
+              <option value="king">King</option>
+            </select>
+          </div>
 
-        <button className="bg-green-500 text-white px-4 py-2">
-          Update
-        </button>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Capacity
+            </label>
+            <input
+              name="capacity"
+              value={form.capacity}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Enter capacity"
+            />
+          </div>
 
-      </form>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Price
+            </label>
+            <input
+              name="price"
+              value={form.price}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Enter price"
+            />
+          </div>
+
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Facilities
+            </label>
+            <input
+              value={form.facilities?.join(",") || ""}
+              onChange={handleFacilities}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="AC, WiFi, TV"
+            />
+          </div>
+
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Room Image
+            </label>
+            <input
+              type="file"
+              onChange={handleImage}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white"
+            />
+          </div>
+
+          
+          <button
+            type="submit"
+            className="w-full bg-green-500 hover:bg-green-600 transition text-white font-semibold py-2.5 rounded-lg shadow-md"
+          >
+            Update Room
+          </button>
+
+        </form>
+      </div>
     </div>
   );
 };

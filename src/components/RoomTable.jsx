@@ -1,34 +1,55 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const RoomTable = ({ search = "", filter = "all" }) => {
   const [rooms, setRooms] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const navigate = useNavigate();
+
   const itemsPerPage = 10;
+  const API = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
+  
+  const fetchRooms = async () => {
+    const res = await axios.get(`${API}/api/room`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    setRooms(res.data);
+  };
 
   useEffect(() => {
-    const fetchRooms = async () => {
-      const res = await axios.get(
-        "https://hostelbackend-uzne.onrender.com/api/room",
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        },
-      );
-      setRooms(res.data);
-    };
-
     fetchRooms();
   }, []);
 
-  // reset page
+ 
+  const handleDelete = async (id) => {
+    if (!window.confirm("Delete this room?")) return;
+
+    try {
+      await axios.delete(`${API}/api/room/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      toast.success("Room deleted ✅");
+      fetchRooms();
+    } catch (err) {
+      toast.error("Delete failed ");
+    }
+  };
+
+ 
   useEffect(() => {
     setCurrentPage(1);
   }, [search, filter]);
 
-  //  search
+  // search
   let filteredRooms = rooms.filter((room) => {
     const term = search.toLowerCase();
     return (
@@ -37,30 +58,31 @@ const RoomTable = ({ search = "", filter = "all" }) => {
     );
   });
 
-  //  filter
+  // filter
   if (filter === "available") {
     filteredRooms = filteredRooms.filter(
-      (room) => room.occupied < room.capacity,
+      (room) => room.occupied < room.capacity
     );
   }
 
   if (filter === "full") {
     filteredRooms = filteredRooms.filter(
-      (room) => room.occupied >= room.capacity,
+      (room) => room.occupied >= room.capacity
     );
   }
 
-  //  pagination
+  // pagination
   const indexOfLast = currentPage * itemsPerPage;
   const currentRooms = filteredRooms.slice(
     indexOfLast - itemsPerPage,
-    indexOfLast,
+    indexOfLast
   );
 
   const totalPages = Math.ceil(filteredRooms.length / itemsPerPage);
 
   return (
-    <div className="rounded-xl overflow-hidden">
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+
       <table className="w-full text-sm text-left">
         <thead className="bg-gray-100 text-gray-700 text-xs uppercase">
           <tr>
@@ -69,12 +91,16 @@ const RoomTable = ({ search = "", filter = "all" }) => {
             <th className="px-6 py-3">Capacity</th>
             <th className="px-6 py-3">Occupied</th>
             <th className="px-6 py-3">Status</th>
+            <th className="px-6 py-3 text-center">Actions</th> 
           </tr>
         </thead>
 
         <tbody>
           {currentRooms.map((room) => (
-            <tr key={room._id} className="border-b hover:bg-gray-50 transition">
+            <tr
+              key={room._id}
+              className="border-b hover:bg-gray-50 transition"
+            >
               <td className="px-6 py-4 font-medium">{room.roomNumber}</td>
 
               <td className="px-6 py-4 capitalize">{room.type}</td>
@@ -95,22 +121,27 @@ const RoomTable = ({ search = "", filter = "all" }) => {
                 )}
               </td>
 
-              <td className="flex gap-3">
-                {/* Edit */}
-                <button
-                  onClick={() => navigate(`/admin/rooms/edit/${room._id}`)}
-                  className="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 hover:scale-105 transition"
-                >
-                  Edit
-                </button>
+              {/* ACTIONS */}
+              <td className="px-6 py-4">
+                <div className="flex justify-center gap-3">
 
-                {/* Delete */}
-                <button
-                  onClick={() => handleDelete(room._id)}
-                  className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 hover:scale-105 transition"
-                >
-                  Delete
-                </button>
+                  {/* Edit */}
+                  <button
+                    onClick={() => navigate(`/admin/rooms/edit/${room._id}`)}
+                    className="px-3 py-1 bg-blue-500 text-white rounded-lg text-xs font-medium transition-all duration-200 hover:bg-blue-600 hover:scale-105 shadow-sm"
+                  >
+                    Edit
+                  </button>
+
+                  {/* Delete */}
+                  <button
+                    onClick={() => handleDelete(room._id)}
+                    className="px-3 py-1 bg-red-500 text-white rounded-lg text-xs font-medium transition-all duration-200 hover:bg-red-600 hover:scale-105 shadow-sm"
+                  >
+                    Delete
+                  </button>
+
+                </div>
               </td>
             </tr>
           ))}
