@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Pencil, Trash2 } from "lucide-react";
 
 const RoomTable = ({ search = "", filter = "all" }) => {
   const [rooms, setRooms] = useState([]);
@@ -126,19 +127,20 @@ const RoomTable = ({ search = "", filter = "all" }) => {
                 <div className="flex justify-center gap-3">
 
                   {/* Edit */}
-                  <button
-                    onClick={() => navigate(`/admin/rooms/edit/${room._id}`)}
-                    className="px-3 py-1 bg-blue-500 text-white rounded-lg text-xs font-medium transition-all duration-200 hover:bg-blue-600 hover:scale-105 shadow-sm"
-                  >
+                  <button 
+                   onClick={() => navigate(`/admin/rooms/edit/${room._id}`)}
+                   className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg text-xs font-medium transition-all duration-300 hover:scale-110 hover:shadow-md">
+                   <Pencil size={14} />
                     Edit
                   </button>
 
                   {/* Delete */}
-                  <button
+            
+                  <button 
                     onClick={() => handleDelete(room._id)}
-                    className="px-3 py-1 bg-red-500 text-white rounded-lg text-xs font-medium transition-all duration-200 hover:bg-red-600 hover:scale-105 shadow-sm"
-                  >
-                    Delete
+                    className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg text-xs font-medium transition-all duration-300 hover:scale-110 hover:shadow-md">
+                    <Trash2 size={14} />
+                      Delete
                   </button>
 
                 </div>
@@ -165,7 +167,7 @@ const RoomTable = ({ search = "", filter = "all" }) => {
         <button
           onClick={() => setCurrentPage((p) => p + 1)}
           disabled={currentPage === totalPages || totalPages === 0}
-          className="px-4 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50"
+          className="px-4 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 transition"
         >
           Next
         </button>
