@@ -18,9 +18,12 @@ const CreateRoom = () => {
 
   const navigate = useNavigate();
 
-  const API = import.meta.env.VITE_API_URL ;
+  
+  const API =
+    import.meta.env.VITE_API_URL ||
+    "https://hostelbackend-uzne.onrender.com";
 
-  // AUTO CONFIG 
+  // Auto config for room
   const roomConfig = {
     king: { capacity: 6, price: 5500 },
     queen: { capacity: 5, price: 6600 },
@@ -29,11 +32,10 @@ const CreateRoom = () => {
     double: { capacity: 2, price: 9900 },
   };
 
-  // handle input
+  // Handle input
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // type select → auto set capacity & price
     if (name === "type") {
       const config = roomConfig[value];
 
@@ -48,17 +50,17 @@ const CreateRoom = () => {
     }
   };
 
-  // facilities
+  // Facilities
   const handleFacilities = (e) => {
     setForm({ ...form, facilities: e.target.value.split(",") });
   };
 
-  // image select
+  // Image select
   const handleImageChange = (e) => {
     setImageFile(e.target.files[0]);
   };
 
-  // upload image
+  // Upload image
   const uploadImage = async () => {
     if (!imageFile) return "";
 
@@ -67,15 +69,15 @@ const CreateRoom = () => {
 
     try {
       const res = await axios.post(`${API}/api/upload`, formData);
-      
       return res.data.url;
     } catch (err) {
+      console.log("UPLOAD ERROR:", err);
       toast.error("Image upload failed ");
       return "";
     }
   };
 
-  
+  // Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -84,6 +86,7 @@ const CreateRoom = () => {
       const imageUrl = await uploadImage();
 
       if (!imageUrl) {
+        toast.error("Image upload failed");
         setLoading(false);
         return;
       }
@@ -104,6 +107,7 @@ const CreateRoom = () => {
         navigate("/admin/rooms");
       }
     } catch (error) {
+      console.log("CREATE ERROR:", error);
       toast.error(error.response?.data?.message || "Error creating room");
     } finally {
       setLoading(false);
@@ -119,6 +123,7 @@ const CreateRoom = () => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           
+         
           <div>
             <label className="text-sm font-medium text-gray-600 mb-1 block">
               Room Number
@@ -127,7 +132,7 @@ const CreateRoom = () => {
               type="text"
               name="roomNumber"
               placeholder="Enter room number"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none hover:border-gray-400"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none"
               onChange={handleChange}
               required
             />
@@ -140,7 +145,7 @@ const CreateRoom = () => {
             </label>
             <select
               name="type"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none hover:border-gray-400"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none"
               onChange={handleChange}
               required
             >
@@ -188,7 +193,7 @@ const CreateRoom = () => {
             <input
               type="text"
               placeholder="AC, WiFi, TV"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none hover:border-gray-400"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none"
               onChange={handleFacilities}
             />
           </div>
@@ -200,7 +205,7 @@ const CreateRoom = () => {
             </label>
             <input
               type="file"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 cursor-pointer hover:border-gray-400 transition"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 cursor-pointer"
               onChange={handleImageChange}
               required
             />
@@ -210,10 +215,10 @@ const CreateRoom = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-3 rounded-xl text-white font-semibold transition-all duration-300 transform ${
+            className={`w-full py-3 rounded-xl text-white font-semibold transition ${
               loading
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 hover:scale-[1.03] active:scale-95 shadow-md hover:shadow-lg"
+                : "bg-blue-600 hover:bg-blue-700"
             }`}
           >
             {loading ? "Creating..." : "Create Room"}
