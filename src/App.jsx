@@ -37,6 +37,7 @@ import RevenueReport from "./pages/admin/RevenueReport";
 import CreateStaff from "./pages/admin/CreateStaff";
 import CreateUsers from "./pages/admin/CreateUsers";
 import RoomEdit from "./pages/admin/RoomEdit";
+import RoomDetails from "./pages/resident/RoomDetails";
 
 const App = () => {
   return (
@@ -170,7 +171,7 @@ const App = () => {
                 </PrivateRoute>
               }
             />
-            
+
             <Route
               path="/admin/residents"
               element={
@@ -258,6 +259,19 @@ const App = () => {
                   <RoleRoute allowedRoles={["resident"]}>
                     <DashboardLayout>
                       <AvailableRooms />
+                    </DashboardLayout>
+                  </RoleRoute>
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/resident/room/:id"
+              element={
+                <PrivateRoute>
+                  <RoleRoute allowedRoles={["resident"]}>
+                    <DashboardLayout>
+                      <RoomDetails/>
                     </DashboardLayout>
                   </RoleRoute>
                 </PrivateRoute>

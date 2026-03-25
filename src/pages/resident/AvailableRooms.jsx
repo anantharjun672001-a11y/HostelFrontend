@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const AvailableRooms = () => {
 
   const [rooms, setRooms] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
 
@@ -19,9 +20,7 @@ const AvailableRooms = () => {
         setRooms(res.data);
 
       } catch (error) {
-
         console.log(error);
-
       }
 
     };
@@ -29,40 +28,6 @@ const AvailableRooms = () => {
     fetchRooms();
 
   }, []);
-
-  const handleChooseRoom = async (roomId) => {
-
-    try {
-
-      await axios.post(
-        "https://hostelbackend-uzne.onrender.com/api/room/assign",
-        {
-          roomId
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`
-          }
-        }
-      );
-
-      toast.success("Room assigned successfully");
-
-      const res = await axios.get(
-        "https://hostelbackend-uzne.onrender.com/api/room/available"
-      );
-
-      setRooms(res.data);
-
-    } catch (error) {
-
-      toast.error(
-        error.response?.data?.message || "Error choosing room"
-      );
-
-    }
-
-  };
 
   return (
 
@@ -86,7 +51,9 @@ const AvailableRooms = () => {
 
             <div
               key={room._id}
-              className="bg-white border border-gray-100 shadow-md rounded-xl p-6 hover:shadow-lg transition"
+              className="bg-white border border-gray-100 shadow-md rounded-xl p-6 
+              hover:shadow-xl hover:scale-105 transition cursor-pointer"
+              onClick={() => navigate(`/resident/room/${room._id}`)}
             >
 
               <h2 className="text-lg font-semibold mb-3">
@@ -110,10 +77,13 @@ const AvailableRooms = () => {
               </div>
 
               <button
-                onClick={() => handleChooseRoom(room._id)}
-                className="mt-5 w-full bg-green-600 hover:bg-green-700 transition text-white py-2 rounded-lg"
+                className="mt-5 w-full py-2 rounded-lg text-white font-medium
+                bg-gradient-to-r from-green-500 to-emerald-600
+                hover:from-emerald-600 hover:to-green-500
+                transition-all duration-300
+                transform hover:scale-105 active:scale-95 shadow-md hover:shadow-xl"
               >
-                Choose Room
+                View & Choose
               </button>
 
             </div>
