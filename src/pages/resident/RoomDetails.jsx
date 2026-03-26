@@ -37,7 +37,7 @@ const RoomDetails = () => {
   const handlePayment = async () => {
     try {
       const res = await axios.post(
-        `${API}/api/payments/pay`,
+        `${API}/api/payments/create-order`,
         { roomId: room._id },
         {
           headers: {
@@ -46,10 +46,30 @@ const RoomDetails = () => {
         },
       );
 
-      toast.success(`Paid ₹${res.data.amount}`);
+      const { orderId, amount, key } = res.data;
 
-      navigate("/resident/my-room");
+      const options = {
+        key,
+        amount: amount * 100,
+        currency: "INR",
+        name: "StayHive",
+        description: "Room Booking Payment",
+        order_id: orderId,
+
+        handler: function () {
+          toast.success("Payment Successful ");
+          navigate("/resident/my-room");
+        },
+
+        theme: {
+          color: "#4f46e5",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
     } catch (error) {
+      console.log(error);
       toast.error("Payment failed");
     }
   };
@@ -138,7 +158,6 @@ const RoomDetails = () => {
           >
             Pay Now
           </button>
-
         </div>
       </div>
     </div>
