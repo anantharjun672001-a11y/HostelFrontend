@@ -40,6 +40,7 @@ import RoomEdit from "./pages/admin/RoomEdit";
 import RoomDetails from "./pages/resident/RoomDetails";
 import Register from "./pages/Register";
 
+
 const App = () => {
   return (
     <>
@@ -53,6 +54,7 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register/>}/>
+            
 
             {/* DASHBOARD */}
             <Route
