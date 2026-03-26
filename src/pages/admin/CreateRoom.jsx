@@ -25,11 +25,11 @@ const CreateRoom = () => {
 
   
   const roomConfig = {
-    king: { capacity: 6, price: 5500 },
-    queen: { capacity: 5, price: 6600 },
-    quad: { capacity: 4, price: 7700 },
-    triple: { capacity: 3, price: 8800 },
-    double: { capacity: 2, price: 9900 },
+    king: { capacity: 6, price: 4300 },
+    queen: { capacity: 5, price: 5000 },
+    quad: { capacity: 4, price: 5200 },
+    triple: { capacity: 3, price: 6000 },
+    double: { capacity: 2, price: 6500 },
   };
 
  

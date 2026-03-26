@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 const RoomDetails = () => {
   const { id } = useParams();
@@ -11,6 +10,8 @@ const RoomDetails = () => {
   const [loading, setLoading] = useState(true);
 
   const API = "https://hostelbackend-uzne.onrender.com";
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchRoom();
@@ -32,8 +33,6 @@ const RoomDetails = () => {
     }
   };
 
-  const navigate = useNavigate();
-
   const handlePayment = async () => {
     try {
       const res = await axios.post(
@@ -43,7 +42,7 @@ const RoomDetails = () => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        },
+        }
       );
 
       const { orderId, amount, key } = res.data;
@@ -56,9 +55,27 @@ const RoomDetails = () => {
         description: "Room Booking Payment",
         order_id: orderId,
 
-        handler: function () {
-          toast.success("Payment Successful ");
-          navigate("/resident/my-room");
+        // SINGLE HANDLER 
+        handler: async function () {
+          try {
+            toast.success("Payment Successful ");
+
+            // TEMP FIX (until webhook works)
+            await axios.post(
+              `${API}/api/room/assign`,
+              { roomId: room._id },
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+              }
+            );
+
+            navigate("/resident/my-room");
+          } catch (err) {
+            console.log(err);
+            toast.error("Room assign failed");
+          }
         },
 
         theme: {
@@ -68,6 +85,7 @@ const RoomDetails = () => {
 
       const rzp = new window.Razorpay(options);
       rzp.open();
+
     } catch (error) {
       console.log(error);
       toast.error("Payment failed");
@@ -79,18 +97,21 @@ const RoomDetails = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-8">
+
       <div className="grid md:grid-cols-2 gap-6">
+
+        {/* IMAGE */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden group">
           <div className="h-[260px] overflow-hidden">
             <img
               src={room.image}
               alt="room"
-              className="w-full h-full object-cover 
-              group-hover:scale-110 transition duration-500"
+              className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
             />
           </div>
         </div>
 
+        {/* DETAILS */}
         <div className="bg-white rounded-2xl shadow-lg p-6 space-y-3">
           <h1 className="text-2xl font-bold text-gray-800">
             Room {room.roomNumber}
@@ -111,7 +132,6 @@ const RoomDetails = () => {
           {/* FACILITIES */}
           <div>
             <h3 className="font-semibold mb-2">Facilities</h3>
-
             <div className="flex flex-wrap gap-2">
               {room.facilities?.map((f, i) => (
                 <span
@@ -126,13 +146,10 @@ const RoomDetails = () => {
         </div>
       </div>
 
-      {/* 💳 PAY CARD (CENTER) */}
+      {/* PAY CARD */}
       <div className="flex justify-center">
-        <div
-          className="w-full md:w-1/2 
-        bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500
-        rounded-2xl shadow-xl p-6 text-white space-y-4"
-        >
+        <div className="w-full md:w-1/2 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-2xl shadow-xl p-6 text-white space-y-4">
+
           <h2 className="text-xl font-semibold">Pricing</h2>
 
           <p>
@@ -158,8 +175,10 @@ const RoomDetails = () => {
           >
             Pay Now
           </button>
+
         </div>
       </div>
+
     </div>
   );
 };
