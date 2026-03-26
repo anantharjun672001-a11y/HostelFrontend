@@ -1,7 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import bgImage from "../assets/hostel.jpg";
 
 const Register = () => {
 
@@ -23,7 +24,6 @@ const Register = () => {
     e.preventDefault();
 
     try {
-
       setLoading(true);
 
       await axios.post(
@@ -31,14 +31,11 @@ const Register = () => {
         form
       );
 
-      toast.success("Account created successfully ");
-
+      toast.success("Account created successfully");
       navigate("/login");
 
     } catch (error) {
-
       toast.error(error.response?.data?.message || "Registration failed");
-
     } finally {
       setLoading(false);
     }
@@ -46,74 +43,104 @@ const Register = () => {
 
   return (
 
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-blue-100 to-purple-100 p-4">
+    <div className="relative min-h-screen w-full">
 
-      <div className="w-full max-w-md bg-white/80 backdrop-blur-md rounded-3xl shadow-xl p-8 space-y-6 border border-gray-100">
+      
+      <img
+        src={bgImage}
+        alt="bg"
+        className="absolute inset-0 w-full h-full object-cover"
+      />
 
-        <h2 className="text-3xl font-bold text-center text-gray-800">
-          Create Account
-        </h2>
+      
+      <div className="absolute inset-0 bg-black/60"></div>
 
-        <p className="text-center text-gray-500 text-sm">
-          Register as a resident
-        </p>
+      
+      <div className="relative z-10 flex items-center justify-center min-h-screen px-4">
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="w-full max-w-md bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-8 shadow-xl">
 
-          <input
-            type="text"
-            name="name"
-            placeholder="Full Name"
-            value={form.name}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-indigo-400 outline-none transition"
-          />
+          <h1 className="text-3xl font-bold text-center text-white mb-2">
+            Create Account
+          </h1>
 
-          <input
-            type="email"
-            name="email"
-            placeholder="Email Address"
-            value={form.email}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-indigo-400 outline-none transition"
-          />
+          <p className="text-center text-gray-200 mb-6">
+            Register to continue
+          </p>
 
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={form.password}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-indigo-400 outline-none transition"
-          />
+          <form onSubmit={handleSubmit} className="space-y-5">
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 rounded-xl text-white font-semibold bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 transition duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02] active:scale-95 disabled:opacity-50"
-          >
-            {loading ? "Creating..." : "Register"}
-          </button>
+            <div>
+              <label className="block mb-1 text-sm text-gray-200">
+                Full Name
+              </label>
 
-        </form>
+              <input
+                type="text"
+                name="name"
+                placeholder="Enter your name"
+                value={form.name}
+                onChange={handleChange}
+                required
+                className="w-full bg-white/20 text-white placeholder-gray-300 border border-white/20 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              />
+            </div>
 
-        <p className="text-sm text-center text-gray-500">
-          Already have an account?{" "}
-          <span
-            onClick={() => navigate("/login")}
-            className="text-indigo-600 cursor-pointer hover:underline font-medium"
-          >
-            Login
-          </span>
-        </p>
+            <div>
+              <label className="block mb-1 text-sm text-gray-200">
+                Email
+              </label>
 
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                value={form.email}
+                onChange={handleChange}
+                required
+                className="w-full bg-white/20 text-white placeholder-gray-300 border border-white/20 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block mb-1 text-sm text-gray-200">
+                Password
+              </label>
+
+              <input
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                value={form.password}
+                onChange={handleChange}
+                required
+                className="w-full bg-white/20 text-white placeholder-gray-300 border border-white/20 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 hover:bg-blue-700 transition text-white font-medium py-2.5 rounded-lg flex justify-center items-center gap-2"
+            >
+              {loading && (
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              )}
+              {loading ? "Creating..." : "Register"}
+            </button>
+
+          </form>
+
+          <p className="text-center text-gray-300 mt-4 text-sm">
+            Already have an account?{" "}
+            <Link to="/login" className="text-blue-400 hover:underline">
+              Login
+            </Link>
+          </p>
+
+        </div>
       </div>
-
     </div>
-
   );
 };
 
