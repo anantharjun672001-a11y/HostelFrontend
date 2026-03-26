@@ -38,6 +38,7 @@ import CreateStaff from "./pages/admin/CreateStaff";
 import CreateUsers from "./pages/admin/CreateUsers";
 import RoomEdit from "./pages/admin/RoomEdit";
 import RoomDetails from "./pages/resident/RoomDetails";
+import Register from "./pages/Register";
 
 const App = () => {
   return (
@@ -51,6 +52,7 @@ const App = () => {
             {/* PUBLIC */}
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register/>}/>
 
             {/* DASHBOARD */}
             <Route
