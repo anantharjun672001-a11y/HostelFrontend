@@ -1,16 +1,70 @@
-# React + Vite
+# 🏠 Hostel Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack **Hostel Management System** built using the MERN stack to manage residents, rooms, and billing efficiently with role-based access.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🌐 Live Demo
 
-## React Compiler
+- 🔗 Frontend: https://hostel-frontend-topaz.vercel.app/
+- 🔗 Backend API: https://hostelbackend-uzne.onrender.com/
+- 📂 Old Repository: https://github.com/anantharjun672001-a11y/Hostel-Management/tree/main
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 📌 Overview
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+This project is designed to simplify hostel administration by providing a centralized system for managing:
+
+- Residents
+- Rooms
+- Bills
+- Role-based authentication (Admin, Staff, Resident)
+
+Hostel management systems typically handle room allocation, payments, and student records in one platform :contentReference[oaicite:0]{index=0}.
+
+---
+
+## 🚀 Features
+
+### 👨‍💼 Admin
+- Create and manage residents
+- Assign rooms
+- Edit resident details
+- Delete residents
+- View all data
+
+### 🧑 Resident
+- Login securely
+- View assigned room
+- View bills
+- Download invoice (PDF)
+
+### 🔐 Authentication
+- JWT-based authentication
+- Role-based access (Admin, Staff, Resident)
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- React.js
+- Tailwind CSS
+- Axios
+- React Router
+
+### Backend
+- Node.js
+- Express.js
+- MongoDB (Mongoose)
+- JWT Authentication
+
+### Other Tools
+- Cloudinary (Image upload)
+- Render (Backend hosting)
+- Vercel (Frontend hosting)
+
+---
+
+## 📂 Project Structure
