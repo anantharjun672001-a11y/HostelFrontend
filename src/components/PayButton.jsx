@@ -24,46 +24,48 @@ const PayButton = ({ billId }) => {
       );
 
       const options = {
-  key: import.meta.env.VITE_RAZORPAY_KEY,
-  amount: data.amount,
-  currency: "INR",
-  order_id: data.id,
+        key: import.meta.env.VITE_RAZORPAY_KEY,
+        amount: data.amount,
+        currency: "INR",
+        order_id: data.id,
 
-  handler: async function (response) {
+        handler: async function (response) {
 
-    try {
+          try {
 
-      const verifyRes = await axios.post(
-        "https://hostelbackend-uzne.onrender.com/api/bill/verify-payment",
-        {
-          razorpay_payment_id: response.razorpay_payment_id,
-          razorpay_order_id: response.razorpay_order_id,
-          razorpay_signature: response.razorpay_signature,
-          billId: billId, // 🔥 IMPORTANT
+            await axios.post(
+              "https://hostelbackend-uzne.onrender.com/api/bill/verify-payment",
+              {
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+                billId: data.billId, 
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+
+            alert("Payment successful");
+
+            // refresh to fetch updated bill
+            window.location.reload();
+
+          } catch (err) {
+
+            console.log("VERIFY ERROR:", err.response?.data || err.message);
+            alert("Payment verification failed");
+
+          }
+
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
 
-      console.log("VERIFY RESPONSE:", verifyRes.data);
-
-      alert("Payment successful");
-
-      window.location.href = "/dashboard";
-
-    } catch (err) {
-      console.log("VERIFY ERROR:", err.response?.data || err.message);
-      alert("Payment verified failed");
-    }
-  },
-
-  theme: {
-    color: "#2563eb",
-  },
-};
+        theme: {
+          color: "#2563eb",
+        },
+      };
 
       const rzp = new window.Razorpay(options);
       rzp.open();
@@ -71,7 +73,6 @@ const PayButton = ({ billId }) => {
     } catch (error) {
 
       console.log("Payment error:", error?.response?.data || error.message);
-
       alert(error?.response?.data?.message || "Payment failed");
 
     } finally {
