@@ -24,33 +24,46 @@ const PayButton = ({ billId }) => {
       );
 
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY,
-        amount: data.amount,
-        currency: "INR",
-        order_id: data.id,
+  key: import.meta.env.VITE_RAZORPAY_KEY,
+  amount: data.amount,
+  currency: "INR",
+  order_id: data.id,
 
-       handler: async function (response) {
+  handler: async function (response) {
 
-        await axios.post(
-          "https://hostelbackend-uzne.onrender.com/api/bill/verify-payment",
-          {
-            ...response,
-            billId: data.billId 
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+    try {
 
-        alert("Payment successful");
-        window.location.href = "/dashboard";
-      },
-        theme: {
-          color: "#2563eb",
+      const verifyRes = await axios.post(
+        "https://hostelbackend-uzne.onrender.com/api/bill/verify-payment",
+        {
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_signature: response.razorpay_signature,
+          billId: billId, // 🔥 IMPORTANT
         },
-      };
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("VERIFY RESPONSE:", verifyRes.data);
+
+      alert("Payment successful");
+
+      window.location.href = "/dashboard";
+
+    } catch (err) {
+      console.log("VERIFY ERROR:", err.response?.data || err.message);
+      alert("Payment verified failed");
+    }
+  },
+
+  theme: {
+    color: "#2563eb",
+  },
+};
 
       const rzp = new window.Razorpay(options);
       rzp.open();
