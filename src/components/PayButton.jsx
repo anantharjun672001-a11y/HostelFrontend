@@ -29,24 +29,24 @@ const PayButton = ({ billId }) => {
         currency: "INR",
         order_id: data.id,
 
-        handler: async function (response) {
+       handler: async function (response) {
 
-          await axios.post(
-            "https://hostelbackend-uzne.onrender.com/api/bill/verify-payment",
-            response,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+        await axios.post(
+          "https://hostelbackend-uzne.onrender.com/api/bill/verify-payment",
+          {
+            ...response,
+            billId: data.billId 
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-          alert("Payment successful");
-
-          
-          window.location.href = "/dashboard";
-        },
-
+        alert("Payment successful");
+        window.location.href = "/dashboard";
+      },
         theme: {
           color: "#2563eb",
         },
