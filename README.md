@@ -9,6 +9,8 @@ A full-stack **Hostel Management System** built using the MERN stack to manage r
 - 🔗 Frontend: https://hostel-frontend-topaz.vercel.app/
 - 🔗 Backend API: https://hostelbackend-uzne.onrender.com/
 - 📂 Old Repository: https://github.com/anantharjun672001-a11y/Hostel-Management/tree/main
+- Frontend Repositary:https://github.com/anantharjun672001-a11y/HostelFrontend
+- Backend Repositary:https://github.com/anantharjun672001-a11y/HostelBackend
 
 ---
 
