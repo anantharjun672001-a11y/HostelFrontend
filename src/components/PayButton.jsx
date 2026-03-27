@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 const PayButton = ({ billId }) => {
 
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handlePayment = async () => {
 
@@ -24,10 +24,9 @@ const PayButton = ({ billId }) => {
       );
 
       const options = {
-
         key: import.meta.env.VITE_RAZORPAY_KEY,
         amount: data.amount,
-        currency: data.currency,
+        currency: "INR",
         order_id: data.id,
 
         handler: async function (response) {
@@ -43,14 +42,14 @@ const PayButton = ({ billId }) => {
           );
 
           alert("Payment successful");
-          window.location.reload();
 
+          
+          window.location.href = "/dashboard";
         },
 
         theme: {
           color: "#2563eb",
         },
-
       };
 
       const rzp = new window.Razorpay(options);
