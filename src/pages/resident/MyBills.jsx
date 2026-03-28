@@ -3,10 +3,24 @@ import axios from "axios";
 
 const MyBills = () => {
   const [bills, setBills] = useState([]);
-
-  
   const [currentPage, setCurrentPage] = useState(1);
   const billsPerPage = 5;
+
+  const getBillList = (data) => {
+    if (Array.isArray(data)) return data;
+    return data?.bills || data?.data || [];
+  };
+
+  const isBillPaid = (bill) => {
+    const normalizedStatus = (bill.status || bill.paymentStatus || "")
+      .toString()
+      .trim()
+      .toLowerCase();
+
+    return ["paid", "success", "completed", "settled"].includes(
+      normalizedStatus
+    );
+  };
 
   useEffect(() => {
     fetchBills();
@@ -23,7 +37,7 @@ const MyBills = () => {
         }
       );
 
-      setBills(res.data);
+      setBills(getBillList(res.data));
     } catch (error) {
       console.log(error);
     }
@@ -52,7 +66,6 @@ const MyBills = () => {
     }
   };
 
-  
   const indexOfLast = currentPage * billsPerPage;
   const indexOfFirst = indexOfLast - billsPerPage;
   const currentBills = bills.slice(indexOfFirst, indexOfLast);
@@ -60,15 +73,10 @@ const MyBills = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
-
-      <h1 className="text-4xl font-bold text-gray-800">
-        My Bills
-      </h1>
+      <h1 className="text-4xl font-bold text-gray-800">My Bills</h1>
 
       <div className="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-100">
-
         <table className="w-full text-sm text-left text-gray-600">
-
           <thead className="bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 text-xs uppercase">
             <tr>
               <th className="px-6 py-4">Month</th>
@@ -80,7 +88,6 @@ const MyBills = () => {
           </thead>
 
           <tbody>
-
             {bills.length === 0 ? (
               <tr>
                 <td colSpan="5" className="text-center px-6 py-10 text-gray-400">
@@ -90,58 +97,48 @@ const MyBills = () => {
             ) : (
               currentBills.map((bill) => (
                 <tr
-                  key={bill._id}
+                  key={bill._id || bill.id || bill.month}
                   className="border-t hover:bg-gray-50 transition duration-200"
                 >
-                  <td className="px-6 py-4 font-medium">
-                    {bill.month}
-                  </td>
+                  <td className="px-6 py-4 font-medium">{bill.month}</td>
 
                   <td className="px-6 py-4">
-                    {bill.resident?.room?.roomNumber || "-"}
+                    {bill.resident?.room?.roomNumber || bill.room?.roomNumber || "-"}
                   </td>
 
                   <td className="px-6 py-4 font-semibold text-blue-600">
-                    ₹{bill.total}
+                    Rs. {bill.total ?? bill.amount ?? 0}
                   </td>
 
                   <td className="px-6 py-4">
                     <span
                       className={`text-xs font-medium px-3 py-1 rounded-full ${
-                        bill.status === "paid"
+                        isBillPaid(bill)
                           ? "bg-green-100 text-green-600"
                           : "bg-red-100 text-red-600"
                       }`}
                     >
-                      {bill.status}
+                      {isBillPaid(bill) ? "Paid" : "Unpaid"}
                     </span>
                   </td>
 
                   <td className="px-6 py-4 text-center">
-
-                    
                     <button
-                      onClick={() => downloadInvoice(bill._id)}
+                      onClick={() => downloadInvoice(bill._id || bill.id)}
                       className="relative inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 transition duration-300 shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95"
                     >
                       Download
                     </button>
-
                   </td>
-
                 </tr>
               ))
             )}
-
           </tbody>
         </table>
-
       </div>
 
-      
       {bills.length > billsPerPage && (
         <div className="flex justify-center items-center gap-2 mt-4">
-
           <button
             onClick={() => setCurrentPage((prev) => prev - 1)}
             disabled={currentPage === 1}
@@ -171,7 +168,6 @@ const MyBills = () => {
           >
             Next
           </button>
-
         </div>
       )}
     </div>
