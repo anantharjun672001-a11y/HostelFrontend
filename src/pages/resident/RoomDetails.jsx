@@ -8,6 +8,7 @@ const RoomDetails = () => {
 
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [assignedRoom, setAssignedRoom] = useState(null);
 
   const API = "https://hostelbackend-uzne.onrender.com";
 
@@ -15,6 +16,7 @@ const RoomDetails = () => {
 
   useEffect(() => {
     fetchRoom();
+    fetchMyRoom();
   }, []);
 
   const fetchRoom = async () => {
@@ -33,7 +35,32 @@ const RoomDetails = () => {
     }
   };
 
+  const fetchMyRoom = async () => {
+    try {
+      const res = await axios.get(`${API}/api/resident/my-room`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      setAssignedRoom(res.data?.room || null);
+    } catch (error) {
+      if (error?.response?.status !== 404) {
+        console.log(error);
+      }
+    }
+  };
+
+  const alreadyStaying = Boolean(assignedRoom?._id);
+
   const handlePayment = async () => {
+    if (alreadyStaying) {
+      toast.info(
+        `You are already staying in Room ${assignedRoom.roomNumber}. Vacate your current room before booking another one.`
+      );
+      return;
+    }
+
     try {
       const res = await axios.post(
         `${API}/api/payments/create-order`,
@@ -168,14 +195,22 @@ const RoomDetails = () => {
             First month includes advance + rent
           </p>
 
+          {alreadyStaying && (
+            <div className="rounded-xl bg-amber-100/90 px-4 py-3 text-sm font-medium text-amber-900">
+              You are already staying in Room {assignedRoom.roomNumber}. Vacate
+              your current room before booking another one.
+            </div>
+          )}
+
           <button
             onClick={handlePayment}
+            disabled={alreadyStaying}
             className="w-full py-3 rounded-xl font-semibold
             bg-white text-blue-600
-            hover:bg-gray-100
+            hover:bg-gray-100 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed
             transition transform hover:scale-105 shadow-md"
           >
-            Pay Now
+            {alreadyStaying ? "Already Staying In A Room" : "Pay Now"}
           </button>
 
         </div>
