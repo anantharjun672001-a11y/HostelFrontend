@@ -55,15 +55,16 @@ const RoomDetails = () => {
         description: "Room Booking Payment",
         order_id: orderId,
 
-        // SINGLE HANDLER 
-        handler: async function () {
+        // Verify immediately after Razorpay success so we do not depend only on webhook.
+        handler: async function (response) {
           try {
-            toast.success("Payment Successful ");
-
-            // TEMP FIX (until webhook works)
             await axios.post(
-              `${API}/api/room/assign`,
-              { roomId: room._id },
+              `${API}/api/bill/verify-payment`,
+              {
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+              },
               {
                 headers: {
                   Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -71,10 +72,11 @@ const RoomDetails = () => {
               }
             );
 
+            toast.success("Payment Successful");
             navigate("/resident/my-room");
           } catch (err) {
             console.log(err);
-            toast.error("Room assign failed");
+            toast.error("Payment verification failed");
           }
         },
 
