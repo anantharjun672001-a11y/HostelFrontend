@@ -103,6 +103,7 @@ const Bills = () => {
           >
             <option value="all">All</option>
             <option value="paid">Paid</option>
+            <option value="pending">Pending</option>
             <option value="unpaid">Unpaid</option>
           </select>
 
@@ -184,6 +185,8 @@ const Bills = () => {
                       className={`px-3 py-1 rounded-full text-xs font-semibold ${
                         bill.status === "paid"
                           ? "bg-green-100 text-green-600"
+                          : bill.status === "pending"
+                          ? "bg-amber-100 text-amber-700"
                           : "bg-red-100 text-red-600"
                       }`}
                     >
