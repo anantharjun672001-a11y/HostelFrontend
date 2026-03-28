@@ -103,7 +103,7 @@ const MyBills = () => {
                   <td className="px-6 py-4 font-medium">{bill.month}</td>
 
                   <td className="px-6 py-4">
-                    {bill.resident?.room?.roomNumber || bill.room?.roomNumber || "-"}
+                    {bill.room?.roomNumber || bill.resident?.room?.roomNumber || "-"}
                   </td>
 
                   <td className="px-6 py-4 font-semibold text-blue-600">
