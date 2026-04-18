@@ -24,7 +24,7 @@ const StaffDashboard = () => {
   const fetchTasks = async ()=>{
     try{
       const res = await axios.get(
-        "https://hostelbackend-uzne.onrender.com/api/maintenance",
+        "https://hostelbackend-nn7o.onrender.com/api/maintenance",
         {
           headers:{
             Authorization:`Bearer ${localStorage.getItem("token")}`

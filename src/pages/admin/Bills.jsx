@@ -17,7 +17,7 @@ const Bills = () => {
   const fetchBills = async () => {
     try {
       const res = await axios.get(
-        "https://hostelbackend-uzne.onrender.com/api/bill",
+        "https://hostelbackend-nn7o.onrender.com/api/bill",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -34,7 +34,7 @@ const Bills = () => {
   const downloadInvoice = async (billId) => {
     try {
       const res = await axios.get(
-        `https://hostelbackend-uzne.onrender.com/api/bill/invoice/${billId}`,
+        `https://hostelbackend-nn7o.onrender.com/api/bill/invoice/${billId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

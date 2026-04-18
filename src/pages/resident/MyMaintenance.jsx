@@ -12,7 +12,7 @@ const MyMaintenance = () => {
       try{
 
         const res = await axios.get(
-          "https://hostelbackend-uzne.onrender.com/api/maintenance/my",
+          "https://hostelbackend-nn7o.onrender.com/api/maintenance/my",
           {
             headers:{
               Authorization:`Bearer ${localStorage.getItem("token")}`

@@ -26,7 +26,7 @@ const RevenueReport = () => {
   const fetchRevenue = async () => {
     try {
       const res = await axios.get(
-        "https://hostelbackend-uzne.onrender.com/api/bill/report",
+        "https://hostelbackend-nn7o.onrender.com/api/bill/report",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

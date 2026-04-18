@@ -17,7 +17,7 @@ const AssignRoom = () => {
   useEffect(() => {
     const fetchData = async () => {
       const resResidents = await axios.get(
-        "https://hostelbackend-uzne.onrender.com/api/resident",
+        "https://hostelbackend-nn7o.onrender.com/api/resident",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -26,7 +26,7 @@ const AssignRoom = () => {
       );
 
       const resRooms = await axios.get(
-        "https://hostelbackend-uzne.onrender.com/api/room/available",
+        "https://hostelbackend-nn7o.onrender.com/api/room/available",
       );
 
       setResidents(resResidents.data);
@@ -45,7 +45,7 @@ const AssignRoom = () => {
 
     try {
       await axios.post(
-        "https://hostelbackend-uzne.onrender.com/api/room/assign",
+        "https://hostelbackend-nn7o.onrender.com/api/room/assign",
         form,
         {
           headers: {

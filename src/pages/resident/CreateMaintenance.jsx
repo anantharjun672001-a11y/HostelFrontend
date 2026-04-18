@@ -28,7 +28,7 @@ const CreateMaintenance = () => {
     try {
 
       await axios.post(
-        "https://hostelbackend-uzne.onrender.com/api/maintenance",
+        "https://hostelbackend-nn7o.onrender.com/api/maintenance",
         form,
         {
           headers:{

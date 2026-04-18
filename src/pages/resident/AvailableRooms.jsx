@@ -15,7 +15,7 @@ const AvailableRooms = () => {
     const fetchRooms = async () => {
       try {
         const res = await axios.get(
-          "https://hostelbackend-uzne.onrender.com/api/room/available"
+          "https://hostelbackend-nn7o.onrender.com/api/room/available"
         );
 
         setRooms(getRoomList(res.data));

@@ -10,7 +10,7 @@ const MyRoom = () => {
     const fetchMyRoom = async () => {
       try {
         const res = await axios.get(
-          "https://hostelbackend-uzne.onrender.com/api/resident/my-room",
+          "https://hostelbackend-nn7o.onrender.com/api/resident/my-room",
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -37,7 +37,7 @@ const MyRoom = () => {
 
     try {
       await axios.post(
-        "https://hostelbackend-uzne.onrender.com/api/room/vacate",
+        "https://hostelbackend-nn7o.onrender.com/api/room/vacate",
         { residentId },
         {
           headers: {

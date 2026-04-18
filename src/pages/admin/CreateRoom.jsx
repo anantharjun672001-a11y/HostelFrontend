@@ -21,7 +21,7 @@ const CreateRoom = () => {
   
   const API =
     import.meta.env.VITE_API_URL ||
-    "https://hostelbackend-uzne.onrender.com";
+    "https://hostelbackend-nn7o.onrender.com";
 
   
   const roomConfig = {

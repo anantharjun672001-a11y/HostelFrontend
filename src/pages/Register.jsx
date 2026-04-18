@@ -27,7 +27,7 @@ const Register = () => {
       setLoading(true);
 
       await axios.post(
-        "https://hostelbackend-uzne.onrender.com/api/auth/register",
+        "https://hostelbackend-nn7o.onrender.com/api/auth/register",
         form
       );
 

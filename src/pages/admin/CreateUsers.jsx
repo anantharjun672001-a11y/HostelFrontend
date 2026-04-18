@@ -18,7 +18,7 @@ const CreateUsers = () => {
     try {
 
       const res = await axios.post(
-        "https://hostelbackend-uzne.onrender.com/api/admin/create-user",
+        "https://hostelbackend-nn7o.onrender.com/api/admin/create-user",
         data,
         {
           headers: {

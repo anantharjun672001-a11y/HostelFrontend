@@ -15,7 +15,7 @@ const CreateStaff = () => {
     try {
 
       const res = await axios.post(
-        "https://hostelbackend-uzne.onrender.com/api/admin/create-staff",
+        "https://hostelbackend-nn7o.onrender.com/api/admin/create-staff",
         data
       );
 

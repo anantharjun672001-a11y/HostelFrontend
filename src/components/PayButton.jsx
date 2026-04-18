@@ -26,7 +26,7 @@ const PayButton = ({ billId }) => {
       const token = localStorage.getItem("token");
 
       const { data } = await axios.post(
-        `https://hostelbackend-uzne.onrender.com/api/bill/order/${billId}`,
+        `https://hostelbackend-nn7o.onrender.com/api/bill/order/${billId}`,
         {},
         {
           headers: {
@@ -50,7 +50,7 @@ const PayButton = ({ billId }) => {
         handler: async function (response) {
           try {
             await axios.post(
-              "https://hostelbackend-uzne.onrender.com/api/bill/verify-payment",
+              "https://hostelbackend-nn7o.onrender.com/api/bill/verify-payment",
               {
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_order_id: response.razorpay_order_id,

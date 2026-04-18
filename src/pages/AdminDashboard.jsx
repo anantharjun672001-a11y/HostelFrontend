@@ -26,7 +26,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       const { data } = await axios.get(
-        "https://hostelbackend-uzne.onrender.com/api/dashboard",
+        "https://hostelbackend-nn7o.onrender.com/api/dashboard",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

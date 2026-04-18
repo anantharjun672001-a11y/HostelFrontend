@@ -14,7 +14,7 @@ const Residents = () => {
   const fetchResidents = async () => {
     try {
       const res = await axios.get(
-        "https://hostelbackend-uzne.onrender.com/api/resident",
+        "https://hostelbackend-nn7o.onrender.com/api/resident",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -58,7 +58,7 @@ const Residents = () => {
 
     try {
       await axios.delete(
-        `https://hostelbackend-uzne.onrender.com/api/resident/${id}`,
+        `https://hostelbackend-nn7o.onrender.com/api/resident/${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -10,7 +10,7 @@ const RoomDetails = () => {
   const [loading, setLoading] = useState(true);
   const [assignedRoom, setAssignedRoom] = useState(null);
 
-  const API = "https://hostelbackend-uzne.onrender.com";
+  const API = "https://hostelbackend-nn7o.onrender.com";
 
   const navigate = useNavigate();
 
