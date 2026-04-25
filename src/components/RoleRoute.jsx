@@ -1,3 +1,5 @@
+import { Navigate } from "react-router-dom";
+
 const RoleRoute = ({ children, allowedRoles }) => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
@@ -11,3 +13,5 @@ const RoleRoute = ({ children, allowedRoles }) => {
 
   return children;
 };
+
+export default RoleRoute;
