@@ -48,6 +48,13 @@ Hostel management systems typically handle room allocation, payments, and studen
 
 ---
 
+## 🔑 Demo Access
+
+- Admin access: Pre-created in database
+- Staff/Resident: Can be created by Admin
+
+> If required, use the signup/login flow to explore role-based features.
+
 ## 🛠️ Tech Stack
 
 ### Frontend
