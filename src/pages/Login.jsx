@@ -59,21 +59,6 @@ const Login = () => {
             Sign in to your account
           </p>
 
-          {/* Demo credentials */}
-          <div className="bg-white/10 p-4 rounded-lg mb-5 text-sm text-gray-200 border border-white/20">
-            <p className="font-semibold mb-2 text-white">Demo Credentials:</p>
-
-            <p><b>Admin</b></p>
-            <p>Email: anantharjun672001@gmail.com</p>
-            <p>Password: Ananthraj</p>
-
-            <p className="mt-2"><b>Staff</b></p>
-            <p>Email: manoj@gmail.com</p>
-            <p>Password: Manoj</p>
-
-          
-          </div>
-
           <form onSubmit={handleLogin} className="space-y-5">
 
             <div>
