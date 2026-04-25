@@ -39,6 +39,7 @@ import CreateUsers from "./pages/admin/CreateUsers";
 import RoomEdit from "./pages/admin/RoomEdit";
 import RoomDetails from "./pages/resident/RoomDetails";
 import Register from "./pages/Register";
+import Unauthorized from "./pages/Unauthorized";
 
 
 const App = () => {
@@ -53,8 +54,9 @@ const App = () => {
             {/* PUBLIC */}
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register/>}/>
-            
+            <Route path="/register" element={<Register />} />
+
+            <Route path="/unauthorized" element={<Unauthorized />} />
 
             {/* DASHBOARD */}
             <Route
